@@ -8,8 +8,9 @@ const app = express();
 
 mongoose.connect(process.env.DB_URL);
 
-app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended: false}));
+
 app.use(routes);
 
 
