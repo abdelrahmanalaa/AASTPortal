@@ -64,7 +64,7 @@ class StudentService {
         }
         
         if(payload === "LOGIN_PAYLOAD") {
-          FacebookCallbackHandler.sendMessage(this.senderID, {text: "Please enter your registeration number"}, function(regno){
+          FacebookCallbackHandler.sendMessage(this.senderID, {text: "Please enter your registeration number"}, function(){
             FacebookCallbackHandler.sendMessage(this.senderID, {text: "Please enter your pin code"});
           });
           
