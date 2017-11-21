@@ -63,23 +63,23 @@ class StudentService {
         
         if(payload === "SUBSCRIBE_PAYLOAD") {
           let senderID = this.senderID;
-          User.findOne({ facebook_id: senderID }, function(err, fUser){
-            if(!err && fUser && fUser.statuss === "active"){
-              return FacebookCallbackHandler.sendMessage(senderID, {text: "You are already subscribed"});
-            }
-          if(!err && !fUser){
-           User.create({facebook_id: senderID,statuss: "waiting regno"}, function(err, user){
-            if(!err){
-              return FacebookCallbackHandler.sendMessage(senderID, {text: "Please enter your registeration number"});
-            }
-            return console.error(err);
-          });
-          }
-          if(err){
-            FacebookCallbackHandler.sendMessage(senderID, {text: "ERRROR"});
-          }
+          // User.findOne({ facebook_id: senderID }, function(err, fUser){
+          //   if(!err && fUser && fUser.statuss === "active"){
+          //     return FacebookCallbackHandler.sendMessage(senderID, {text: "You are already subscribed"});
+          //   }
+          // if(!err && !fUser){
+          // User.create({facebook_id: senderID,statuss: "waiting regno"}, function(err, user){
+          //   if(!err){
+          //     return FacebookCallbackHandler.sendMessage(senderID, {text: "Please enter your registeration number"});
+          //   }
+          //   return console.error(err);
+          // });
+          // }
+          // if(err){
+          //   FacebookCallbackHandler.sendMessage(senderID, {text: "ERRROR"});
+          // }
 
-          });
+          // });
 
         }
         
