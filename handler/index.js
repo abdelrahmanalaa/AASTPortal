@@ -69,7 +69,7 @@ class StudentService {
               return FacebookCallbackHandler.sendMessage(this.senderID, {text: "You are already subscribed"});
             }
           if(!err && !fUser){
-           User.create({facebook_id: this.senderID,status: "waiting regno"}, function(err, user){
+           User.create({facebook_id: senderID,status: "waiting regno"}, function(err, user){
             if(!err){
               return FacebookCallbackHandler.sendMessage(this.senderID, {text: "Please enter your registeration number"});
             }
