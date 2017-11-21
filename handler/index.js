@@ -1,6 +1,6 @@
 const request = require("request");
 const User = require('./models/user');
-// const crypto = require('crypto');
+const crypto = require('crypto');
 const algorithm = 'aes-256-ctr';
 const password = 'd6F3Efeq';
 
@@ -18,8 +18,8 @@ class FacebookCallbackHandler {
     processMessage(){
         let senderID = this.event.sender.id;
         let message = this.event.message;
-        let StudentService = new StudentService(senderID);
-        StudentService.messageHandler(message.text.toLowerCase().trim());
+        let studentService = new StudentService(senderID);
+        studentService.messageHandler(message.text.toLowerCase().trim());
     }
     
     static sendMessage(recipientId, message){
@@ -32,11 +32,7 @@ class FacebookCallbackHandler {
           message: message,
         }
       }, function(error, response, body) {
-        if (!error) {
-          
-          
-        }
-        else {
+        if (error) {
           return console.error(error);
         }
     });  
