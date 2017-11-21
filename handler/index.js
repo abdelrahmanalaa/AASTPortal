@@ -66,15 +66,12 @@ class StudentService {
             if(!err && fUser.statuss === "active"){
               return FacebookCallbackHandler.sendMessage(this.senderID, {text: "You are already subscribed"});
             }
-          if(err){
-            User.create({facebook_id: this.senderID,status: "waiting regno"}, function(err, user){
+          User.create({facebook_id: this.senderID,status: "waiting regno"}, function(err, user){
             if(!err){
               return FacebookCallbackHandler.sendMessage(this.senderID, {text: "Please enter your registeration number"});
             }
             return console.error(err);
           });
-          }
-          
           });
 
         }
