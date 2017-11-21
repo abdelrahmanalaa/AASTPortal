@@ -88,7 +88,7 @@ class StudentService {
     messageHandler(message) {
       if(!message.is_echo){
         if(/^\d+$/.test(message)) {
-          let senderID = thi.senderID;
+          let senderID = this.senderID;
          User.findOne({facebook_id: senderID}, function(err, user){
           if(!err){
             if(user.statuss === "waiting regno"){
