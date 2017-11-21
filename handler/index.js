@@ -66,18 +66,18 @@ class StudentService {
           let senderID = this.senderID;
           User.findOne({ facebook_id: senderID }, function(err, fUser){
             if(!err && fUser && fUser.statuss === "active"){
-              return FacebookCallbackHandler.sendMessage(this.senderID, {text: "You are already subscribed"});
+              return FacebookCallbackHandler.sendMessage(senderID, {text: "You are already subscribed"});
             }
           if(!err && !fUser){
            User.create({facebook_id: senderID,status: "waiting regno"}, function(err, user){
             if(!err){
-              return FacebookCallbackHandler.sendMessage(this.senderID, {text: "Please enter your registeration number"});
+              return FacebookCallbackHandler.sendMessage(senderID, {text: "Please enter your registeration number"});
             }
             return console.error(err);
           });
           }
           if(err){
-            FacebookCallbackHandler.sendMessage(this.senderID, {text: "ERRROR"});
+            FacebookCallbackHandler.sendMessage(senderID, {text: "ERRROR"});
           }
 
           });
