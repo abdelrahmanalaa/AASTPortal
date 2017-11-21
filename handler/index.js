@@ -87,18 +87,20 @@ class StudentService {
         if(/^\d+$/.test(message)) {
          User.findOne({facebook_id: senderID}, function(err, user){
           if(!err){
-            if(user.statuss === "waiting regno"){
-              FacebookCallbackHandler.sendMessage(senderID, {text: "Please enter your pin code"});
-              user.registeration_no = message;
-              user.statuss = "waiting pin code";
-              user.save();
-            }
             if(user.statuss === "waiting pin code"){
               user.pin_code = encrypt(message);
               user.statuss = "active";
               user.save();
               FacebookCallbackHandler.sendMessage(senderID, {text: "Done, now you can query for your current semester's results or your current day schedule from the menu."});
             }
+            
+            if(user.statuss === "waiting regno"){
+              FacebookCallbackHandler.sendMessage(senderID, {text: "Please enter your pin code"});
+              user.registeration_no = message;
+              user.statuss = "waiting pin code";
+              user.save();
+            }
+            
           }
         });
         }
