@@ -1,10 +1,10 @@
 const express    = require('express'),
       bodyParser = require('body-parser'),
       request    = require('request'),
-      mongoose   = require('mongoose');
-
+      mongoose   = require('mongoose'),
+      routes     = require('./routes');
 const app = express();
-const routes = require('./routes');
+
 
 mongoose.connect(process.env.DB_URL);
 
