@@ -3,7 +3,7 @@ const User = require('./models/user');
 const crypto = require('crypto');
 const algorithm = 'aes-256-ctr';
 const password = 'd6F3Efeq';
-const mongoose = require('mongoose');
+
 class FacebookCallbackHandler {
     constructor(event) {
         this.event = event;
@@ -63,7 +63,7 @@ class StudentService {
         
         if(payload === "SUBSCRIBE_PAYLOAD") {
           User.findOne({facebook: this.senderID}, function(err, fUser){
-            if(!err && fUser.status != "waiting regno"){
+            if(!err && fUser.statuss != "waiting regno" && fUser.statuss != "waiting pin code"){
               return FacebookCallbackHandler.sendMessage(this.senderID, {text: "You are already subscribed"});
             }
           User.create({facebook_id: this.senderID,status: "waiting regno"}, function(err, user){
@@ -83,15 +83,15 @@ class StudentService {
         if(/^\d+$/.test(message)) {
          User.findOne({facebook_id: this.senderID}, function(err, user){
           if(!err){
-            if(user.status === "waiting regno"){
+            if(user.statuss === "waiting regno"){
               FacebookCallbackHandler.sendMessage(this.senderID, {text: "Please enter your pin code"});
               user.registeration_no = message;
-              user.status = "waiting pin code";
+              user.statuss = "waiting pin code";
               user.save();
             }
-            if(user.status === "waiting pin code"){
+            if(user.statuss === "waiting pin code"){
               user.pin_code = encrypt(message);
-              user.status = "active";
+              user.statuss = "active";
               user.save();
             }
           }

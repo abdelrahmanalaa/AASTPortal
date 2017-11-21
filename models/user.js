@@ -4,7 +4,7 @@ var Schema = mongoose.Schema;
 var userSchema = new Schema ({
     facebook_id: String,
     registeration_no: String,
-    status: String,
+    statuss: String,
     pin_code: String
 });
 
