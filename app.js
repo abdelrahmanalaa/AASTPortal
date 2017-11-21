@@ -1,14 +1,17 @@
-const express = require('express');
-const bodyParser = require('body-parser');
-const request = require('request');
-const mongoose = require('mongoose');
-const config = require('./config');
+const express    = require('express'),
+      bodyParser = require('body-parser'),
+      request    = require('request'),
+      mongoose   = require('mongoose');
+
 const app = express();
 const routes = require('./routes');
-app.use(bodyParser.urlencoded({extend: false}));
-app.use(bodyParser.json());
+
 mongoose.connect(process.env.DBURL);
 
+app.use(bodyParser.urlencoded({extend: false}));
+app.use(bodyParser.json());
 app.use(routes);
+
+
 
 app.listen(process.env.PORT);
