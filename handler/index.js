@@ -86,7 +86,7 @@ class StudentService {
     }
     
     messageHandler(message) {
-
+      if(!message.is_echo){
         if(/^\d+$/.test(message)) {
          User.findOne({facebook_id: this.senderID}, function(err, user){
           if(!err){
@@ -105,6 +105,7 @@ class StudentService {
         });
         }
     }
+}
 }
 
 function encrypt(text){
