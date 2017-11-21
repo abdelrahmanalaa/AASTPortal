@@ -1,6 +1,6 @@
 const request = require("request");
 const User = require('./models/user');
-const crypto = require('crypto');
+// const crypto = require('crypto');
 const algorithm = 'aes-256-ctr';
 const password = 'd6F3Efeq';
 
@@ -75,7 +75,7 @@ class StudentService {
               return FacebookCallbackHandler.sendMessage(this.senderID, {text: "Please enter your registeration number"});
             }
             return console.error(err);
-          })
+          });
           });
 
         }
@@ -120,4 +120,3 @@ function decrypt(text){
 
 module.exports = FacebookCallbackHandler;
 
-//
