@@ -62,7 +62,6 @@ class StudentService {
         }
         
         if(payload === "SUBSCRIBE_PAYLOAD") {
-          console.log("WTF")
           let senderID = this.senderID;
           User.findOne({ facebook_id: senderID }, function(err, fUser){
             if(!err && fUser && fUser.statuss === "active"){
