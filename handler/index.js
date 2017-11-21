@@ -1,5 +1,5 @@
 const request = require("request");
-const User = require('./models/user');
+const User = require('../models/user');
 const crypto = require('crypto');
 const algorithm = 'aes-256-ctr';
 const password = 'd6F3Efeq';
@@ -63,7 +63,7 @@ class StudentService {
         
         if(payload === "SUBSCRIBE_PAYLOAD") {
           User.findOne({facebook: this.senderID}, function(err, fUser){
-            if(!err && fUser.statuss != "waiting regno" && fUser.statuss != "waiting pin code"){
+            if(!err && fUser.statuss === "active"){
               return FacebookCallbackHandler.sendMessage(this.senderID, {text: "You are already subscribed"});
             }
           User.create({facebook_id: this.senderID,status: "waiting regno"}, function(err, user){
