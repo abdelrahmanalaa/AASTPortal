@@ -11,15 +11,15 @@ class FacebookCallbackHandler {
     processPostback() {
         let senderID = this.event.sender.id;
         let payload = this.event.postback.payload;
-        let studentService = new StudentService(senderID);
-        studentService.postbackHandler(payload);
+        let studentService = new StudentService();
+        studentService.postbackHandler(senderID, payload);
     }
     
     processMessage(){
         let senderID = this.event.sender.id;
         let message = this.event.message;
         let studentService = new StudentService(senderID);
-        studentService.messageHandler(message.text.toLowerCase().trim());
+        studentService.messageHandler(senderID, message.text.toLowerCase().trim());
     }
     
     static sendMessage(recipientId, message){
@@ -40,13 +40,11 @@ class FacebookCallbackHandler {
 }
 
 class StudentService {
-    constructor(senderID){
-        this.senderID = senderID;
-    }
-    postbackHandler(payload){
+
+    postbackHandler(senderID, payload){
         if(payload === "Greetings") {
           request({
-            url: "https://graph.facebook.com/v2.6/" + this.senderID,
+            url: "https://graph.facebook.com/v2.6/" + senderID,
             qs: {
                       access_token: process.env.PAGE_ACCESS_TOKEN,
                       fields: "first_name"
@@ -55,14 +53,13 @@ class StudentService {
           }, (error, response, body) => {
             if(!error){
               let bodyObj = JSON.parse(body);
-              FacebookCallbackHandler.sendMessage(this.senderID, {text: "Hey " + bodyObj.first_name + ", I can help you with various things like your student portal try 'help' or check the menu left here." });      
+              FacebookCallbackHandler.sendMessage(senderID, {text: "Hey " + bodyObj.first_name + ", I can help you with various things like your student portal try 'help' or check the menu left here." });      
             }
           });
           
         }
         
         if(payload === "SUBSCRIBE_PAYLOAD") {
-          let senderID = this.senderID;
           User.findOne({ facebook_id: senderID }, function(err, fUser){
             if(!err && fUser && fUser.statuss === "active"){
               return FacebookCallbackHandler.sendMessage(senderID, {text: "You are already subscribed"});
@@ -85,15 +82,13 @@ class StudentService {
         
     }
     
-    messageHandler(message) {
+    messageHandler(senderID, message) {
       if(!message.is_echo){
         if(/^\d+$/.test(message)) {
-          console.log(this.senderID);
-          let senderID = this.senderID;
          User.findOne({facebook_id: senderID}, function(err, user){
           if(!err){
             if(user.statuss === "waiting regno"){
-              FacebookCallbackHandler.sendMessage(this.senderID, {text: "Please enter your pin code"});
+              FacebookCallbackHandler.sendMessage(senderID, {text: "Please enter your pin code"});
               user.registeration_no = message;
               user.statuss = "waiting pin code";
               user.save();
