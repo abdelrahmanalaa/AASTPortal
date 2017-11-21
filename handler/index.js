@@ -88,7 +88,8 @@ class StudentService {
     messageHandler(message) {
       if(!message.is_echo){
         if(/^\d+$/.test(message)) {
-         User.findOne({facebook_id: this.senderID}, function(err, user){
+          let senderID = thi.senderID;
+         User.findOne({facebook_id: senderID}, function(err, user){
           if(!err){
             if(user.statuss === "waiting regno"){
               FacebookCallbackHandler.sendMessage(this.senderID, {text: "Please enter your pin code"});
