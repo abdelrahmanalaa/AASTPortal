@@ -7,8 +7,8 @@ class FacebookCallbackHandler {
     processPostback() {
         let senderID = this.event.sender.id;
         let payload = this.event.postback.payload;
-        let StudentService = new StudentService(senderID);
-        StudentService.postbackHandler(payload);
+        let studentService = new StudentService(senderID);
+        studentService.postbackHandler(payload);
     }
     
     processMessage(){
