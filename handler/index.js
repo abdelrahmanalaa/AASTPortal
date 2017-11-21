@@ -18,7 +18,7 @@ class FacebookCallbackHandler {
         StudentService.messageHandler(message.text.toLowerCase().trim());
     }
     
-    static sendMessage(recipientId, message){
+    static sendMessage(recipientId, message, cb){
       request({
         url: "https://graph.facebook.com/v2.6/me/messages",
         qs: {access_token: process.env.PAGE_ACCESS_TOKEN},
@@ -28,8 +28,8 @@ class FacebookCallbackHandler {
           message: message,
         }
       }, function(error, response, body) {
-        if (error) {
-          console.error("Error sending message: " + response.error);
+        if (!error) {
+          cb();
         }
     });  
   }
@@ -56,6 +56,14 @@ class StudentService {
           });
           
         }
+        
+        if(payload === "LOGIN_PAYLOAD") {
+          FacebookCallbackHandler.sendMessage(this.senderID, {text: "Please enter your registeration number"}, function(regno){
+            FacebookCallbackHandler.sendMessage(this.senderID, {text: "Please enter your pin code"});
+          });
+          
+        }
+        
     }
     
     messageHandler(message) {
