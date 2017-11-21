@@ -41,7 +41,20 @@ class StudentService {
     }
     postbackHandler(payload){
         if(payload === "Greetings") {
-          FacebookCallbackHandler.sendMessage(this.senderID, {text: "Hello dude"});
+          request({
+            url: "https://graph.facebook.com/v2.6/" + this.senderID,
+            qs: {
+                      access_token: process.env.PAGE_ACCESS_TOKEN,
+                      fields: "first_name"
+                      },
+                  method: "GET" 
+          }, (error, response, body) => {
+            if(!error){
+              let bodyObj = JSON.parse(body);
+              FacebookCallbackHandler.sendMessage(this.senderID, {text: "Hey " + bodyObj.first_name + ", I can help you with various things like you student portal try 'help' or check the menu left here" });      
+            }
+          });
+          
         }
     }
     
