@@ -3,13 +3,14 @@ const express    = require('express'),
       request    = require('request'),
       mongoose   = require('mongoose'),
       routes     = require('./routes');
+
 const app = express();
 
 
 mongoose.connect(process.env.DB_URL);
 
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({extended: false}));
+app.use(bodyParser.urlencoded({extended: true}));
 
 app.use(routes);
 
