@@ -86,6 +86,7 @@ class StudentService {
     }
     
     messageHandler(message) {
+      console.log(message);
       if(!message.is_echo){
         if(/^\d+$/.test(message)) {
           let senderID = this.senderID;
