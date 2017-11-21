@@ -79,6 +79,25 @@ class StudentService {
           });
 
         }
+        if(payload === "UNSUBSCRIBE_PAYLOAD") {
+          User.findOne({facebook_id: senderID}, function(err, user){
+            if(err){
+              return console.error(err);
+            } else{
+              if(!user){
+                return FacebookCallbackHandler.sendMessage(senderID, {text: "You are not subscribed."});
+              }
+              else{
+                User.findOneAndRemove({facebook_id: senderID}, function(err, user){
+                  if(err)
+                    return console.error(err);
+                    return FacebookCallbackHandler.sendMessage(senderID, {text: "done"});
+                });
+              }
+            }
+          });
+
+        }        
         
     }
     
