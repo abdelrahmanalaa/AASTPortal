@@ -15,8 +15,7 @@
     "mongoose": "^4.13.4",
     "request": "^2.83.0"
   },
-  {
-    "engines": {
+  "engines": {
     "node": "8.9.1"
   },
 }
