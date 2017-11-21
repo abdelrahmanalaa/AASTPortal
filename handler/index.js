@@ -65,7 +65,10 @@ class StudentService {
           console.log("fuckkkkkkkkkkkkkkkkkkkkk");
           console.log(this.senderID);
           let senderID = this.senderID;
-          User.findOne({ facebook_id: senderID }, function(err, fUser){
+          User.findOne({ facebook_id: senderID }, function(next){
+            console.log('inner');
+            next();
+          },function(err, fUser){
             if(!err && fUser && fUser.statuss === "active"){
               return FacebookCallbackHandler.sendMessage(senderID, {text: "You are already subscribed"});
             }
