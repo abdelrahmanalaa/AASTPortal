@@ -29,7 +29,13 @@ class FacebookCallbackHandler {
         }
       }, function(error, response, body) {
         if (!error) {
-          cb();
+          if(cb){
+            cb();  
+          }
+          
+        }
+        else {
+          return console.error(error);
         }
     });  
   }
