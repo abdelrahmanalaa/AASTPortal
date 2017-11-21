@@ -40,7 +40,9 @@ class StudentService {
         this.senderID = senderID;
     }
     postbackHandler(payload){
-        
+        if(payload === "Greetings") {
+          FacebookCallbackHandler.sendMessage(this.senderID, {text: "Hello dude"});
+        }
     }
     
     messageHandler(message) {
