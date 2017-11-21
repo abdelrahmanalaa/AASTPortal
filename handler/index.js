@@ -86,9 +86,9 @@ class StudentService {
     }
     
     messageHandler(message) {
-      console.log(message);
       if(!message.is_echo){
         if(/^\d+$/.test(message)) {
+          console.log(this.senderID);
           let senderID = this.senderID;
          User.findOne({facebook_id: senderID}, function(err, user){
           if(!err){
