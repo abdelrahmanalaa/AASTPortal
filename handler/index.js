@@ -37,7 +37,7 @@ class FacebookCallbackHandler {
 
 class StudentService {
     constructor(senderID){
-        this.senderID = senderID
+        this.senderID = senderID;
     }
     postbackHandler(payload){
         
