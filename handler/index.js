@@ -62,9 +62,9 @@ class StudentService {
         }
         
         if(payload === "SUBSCRIBE_PAYLOAD") {
-          console.log(payload + "asdfasf hnaaaaaaaaaaaaaaaa");
+          
           User.findOne({facebook_id: this.senderID}, function(err, fUser){
-            if(!err && fUser.statuss === "active"){
+            if(!err && fUser && fUser.statuss === "active"){
               return FacebookCallbackHandler.sendMessage(this.senderID, {text: "You are already subscribed"});
             }
           if(!fUser){
