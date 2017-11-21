@@ -17,7 +17,7 @@ router.post("/webhook", function (req, res) {
     
     req.body.entry.forEach(function(entry) {
       if(!entry.messaging){
-        return console.log(entry);
+        return console.log(entry.postback);
       }
       entry.messaging.forEach(function(event) {
         var facebookHandler = new FacebookCallbackHandler(event);
