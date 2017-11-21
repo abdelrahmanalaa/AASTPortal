@@ -64,7 +64,7 @@ class StudentService {
             if(!err && fUser && fUser.statuss === "active"){
               return FacebookCallbackHandler.sendMessage(senderID, {text: "You are already subscribed"});
             }
-          if(!err && !fUser){
+          if(!err && (!fUser || fUser.statuss === 'waiting regno')){
           User.create({facebook_id: senderID,statuss: "waiting regno"}, function(err, user){
             if(!err){
               return FacebookCallbackHandler.sendMessage(senderID, {text: "Please enter your registeration number"});
@@ -97,6 +97,7 @@ class StudentService {
               user.pin_code = encrypt(message);
               user.statuss = "active";
               user.save();
+              FacebookCallbackHandler.sendMessage(senderID, {text: "Done, now you can query for your current semester's results or your current day schedule from the menu."});
             }
           }
         });
