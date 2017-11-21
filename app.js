@@ -6,7 +6,7 @@ const express    = require('express'),
 const app = express();
 const routes = require('./routes');
 
-mongoose.connect(process.env.DBURL);
+mongoose.connect(process.env.DB_URL);
 
 app.use(bodyParser.urlencoded({extend: false}));
 app.use(bodyParser.json());

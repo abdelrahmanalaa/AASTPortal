@@ -1,9 +1,9 @@
 const express = require('express');
-var FacebookCallbackHandler = require("../handler");
+const FacebookCallbackHandler = require("../handler");
 const router = express.Router();
 
 router.get("/webhook", function (req, res) {
-  if (req.query["hub.verify_token"] === process.env.VTOKEN) {
+  if (req.query["hub.verify_token"] === process.env.V_TOKEN) {
     console.log("Verified webhook");
     res.status(200).send(req.query["hub.challenge"]);
   } else {
