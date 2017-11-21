@@ -1,4 +1,8 @@
 const request = require("request");
+const User = require('./models/user');
+const crypto = require('crypto');
+const algorithm = 'aes-256-ctr';
+const password = 'd6F3Efeq';
 
 class FacebookCallbackHandler {
     constructor(event) {
@@ -18,7 +22,7 @@ class FacebookCallbackHandler {
         StudentService.messageHandler(message.text.toLowerCase().trim());
     }
     
-    static sendMessage(recipientId, message, cb){
+    static sendMessage(recipientId, message){
       request({
         url: "https://graph.facebook.com/v2.6/me/messages",
         qs: {access_token: process.env.PAGE_ACCESS_TOKEN},
@@ -29,9 +33,7 @@ class FacebookCallbackHandler {
         }
       }, function(error, response, body) {
         if (!error) {
-          if(cb){
-            cb();  
-          }
+          
           
         }
         else {
@@ -63,18 +65,57 @@ class StudentService {
           
         }
         
-        if(payload === "LOGIN_PAYLOAD") {
-          FacebookCallbackHandler.sendMessage(this.senderID, {text: "Please enter your registeration number"}, function(){
-            FacebookCallbackHandler.sendMessage(this.senderID, {text: "Please enter your pin code"});
+        if(payload === "SUBSCRIBE_PAYLOAD") {
+          User.findOne({facebook: this.senderID}, function(err, fUser){
+            if(!err && fUser.status != "waiting regno"){
+              return FacebookCallbackHandler.sendMessage(this.senderID, {text: "You are already subscribed"});
+            }
+          User.create({facebook_id: this.senderID,status: "waiting regno"}, function(err, user){
+            if(!err){
+              return FacebookCallbackHandler.sendMessage(this.senderID, {text: "Please enter your registeration number"});
+            }
+            return console.error(err);
+          })
           });
-          
+
         }
         
     }
     
     messageHandler(message) {
-        
+
+        if(/^\d+$/.test(message)) {
+         User.findOne({facebook_id: this.senderID}, function(err, user){
+          if(!err){
+            if(user.status === "waiting regno"){
+              FacebookCallbackHandler.sendMessage(this.senderID, {text: "Please enter your pin code"});
+              user.registeration_no = message;
+              user.status = "waiting pin code";
+              user.save();
+            }
+            if(user.status === "waiting pin code"){
+              user.pin_code = encrypt(message);
+              user.status = "active";
+              user.save();
+            }
+          }
+        })
+        }
     }
+}
+
+function encrypt(text){
+  var cipher = crypto.createCipher(algorithm,password)
+  var crypted = cipher.update(text,'utf8','hex')
+  crypted += cipher.final('hex');
+  return crypted;
+}
+ 
+function decrypt(text){
+  var decipher = crypto.createDecipher(algorithm,password)
+  var dec = decipher.update(text,'hex','utf8')
+  dec += decipher.final('utf8');
+  return dec;
 }
 
 module.exports = FacebookCallbackHandler;
