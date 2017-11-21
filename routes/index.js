@@ -16,9 +16,7 @@ router.post("/webhook", function (req, res) {
   if (req.body.object == "page") {
     
     req.body.entry.forEach(function(entry) {
-      if(!entry.messaging){
-        return console.log(entry.postback);
-      }
+      
       entry.messaging.forEach(function(event) {
         var facebookHandler = new FacebookCallbackHandler(event);
         if (event.postback) {
@@ -26,6 +24,9 @@ router.post("/webhook", function (req, res) {
         }
         if(event.message) {
           facebookHandler.processMessage();
+        }
+        else{
+          console.log(event);
         }
       });
     });
