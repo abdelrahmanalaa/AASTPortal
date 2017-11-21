@@ -62,18 +62,13 @@ class StudentService {
         }
         
         if(payload === "SUBSCRIBE_PAYLOAD") {
-          console.log("fuckkkkkkkkkkkkkkkkkkkkk");
-          console.log(this.senderID);
           let senderID = this.senderID;
-          User.findOne({ facebook_id: senderID }, function(next){
-            console.log('inner');
-            next();
-          },function(err, fUser){
+          User.findOne({ facebook_id: senderID }, function(err, fUser){
             if(!err && fUser && fUser.statuss === "active"){
               return FacebookCallbackHandler.sendMessage(senderID, {text: "You are already subscribed"});
             }
           if(!err && !fUser){
-           User.create({facebook_id: senderID,status: "waiting regno"}, function(err, user){
+           User.create({facebook_id: senderID,statuss: "waiting regno"}, function(err, user){
             if(!err){
               return FacebookCallbackHandler.sendMessage(senderID, {text: "Please enter your registeration number"});
             }
