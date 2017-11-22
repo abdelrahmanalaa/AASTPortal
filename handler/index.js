@@ -62,12 +62,12 @@ class StudentService {
         if(payload === "SUBSCRIBE_PAYLOAD") {
           User.findOne({ facebook_id: senderID }, function(err, fUser){
             if(!err && fUser && fUser.statuss === "active"){
-              return FacebookCallbackHandler.sendMessage(senderID, {text: "You are already subscribed"});
+              return FacebookCallbackHandler.sendMessage(senderID, {text: "You are already subscribed."});
             }
           if(!err && (!fUser || fUser.statuss === 'waiting regno')){
           User.create({facebook_id: senderID,statuss: "waiting regno"}, function(err, user){
             if(!err){
-              return FacebookCallbackHandler.sendMessage(senderID, {text: "Please enter your registeration number"});
+              return FacebookCallbackHandler.sendMessage(senderID, {text: "Please enter your registeration numbe.r"});
             }
             return console.error(err);
           });
@@ -79,6 +79,7 @@ class StudentService {
           });
 
         }
+        
         if(payload === "UNSUBSCRIBE_PAYLOAD") {
           User.findOne({facebook_id: senderID}, function(err, user){
             if(err){
@@ -91,14 +92,34 @@ class StudentService {
                 User.findOneAndRemove({facebook_id: senderID}, function(err, user){
                   if(err)
                     return console.error(err);
-                    return FacebookCallbackHandler.sendMessage(senderID, {text: "done"});
+                    return FacebookCallbackHandler.sendMessage(senderID, {text: "done."});
                 });
               }
             }
           });
 
-        }        
+        }
         
+        if(payload === "SCHEDULE_PAYLOAD") {
+         let regno;
+         let pincode;
+         User.findOne({facebook_id: senderID}, function(err, user){
+            
+            if(!err && user){
+              regno   = user.registeration_no;
+              pincode = decrypt(user.pin_code);
+            }
+            
+            else {
+              FacebookCallbackHandler.sendMessage(senderID, {text: "You must subscribe first."});
+            }
+          
+          });
+          
+          
+          
+          
+        }
     }
     
     messageHandler(senderID, message) {
@@ -110,11 +131,11 @@ class StudentService {
               user.pin_code = encrypt(message);
               user.statuss = "active";
               user.save();
-              FacebookCallbackHandler.sendMessage(senderID, {text: "Done, now you can query for your current semester's results or your current day schedule from the menu."});
+              FacebookCallbackHandler.sendMessage(senderID, {text: "Done, now you can query for your current semester results or your current day schedule from the menu."});
             }
             
             if(user.statuss === "waiting regno"){
-              FacebookCallbackHandler.sendMessage(senderID, {text: "Please enter your pin code"});
+              FacebookCallbackHandler.sendMessage(senderID, {text: "Please enter your pin code."});
               user.registeration_no = message;
               user.statuss = "waiting pin code";
               user.save();
