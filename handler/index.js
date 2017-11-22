@@ -65,18 +65,18 @@ class StudentService {
               return FacebookCallbackHandler.sendMessage(senderID, {text: "You are already subscribed."});
             }
             if(fUser && fUser.statuss === 'waiting regno'){
-              return FacebookCallbackHandler.sendMessage(senderID, {text: "Please enter your registeration numbe.r"});
+              return FacebookCallbackHandler.sendMessage(senderID, {text: "Please enter your registeration number."});
             }
           if(!err && !fUser){
           User.create({facebook_id: senderID,statuss: "waiting regno"}, function(err, user){
             if(!err){
-              return FacebookCallbackHandler.sendMessage(senderID, {text: "Please enter your registeration numbe.r"});
+              return FacebookCallbackHandler.sendMessage(senderID, {text: "Please enter your registeration number."});
             }
             return console.error(err);
           });
           }
           if(err){
-            FacebookCallbackHandler.sendMessage(senderID, {text: "ERRROR"});
+            return console.error(err);
           }
 
           });
@@ -95,7 +95,7 @@ class StudentService {
                 User.findOneAndRemove({facebook_id: senderID}, function(err, user){
                   if(err)
                     return console.error(err);
-                    return FacebookCallbackHandler.sendMessage(senderID, {text: "done."});
+                    return FacebookCallbackHandler.sendMessage(senderID, {text: "Done."});
                 });
               }
             }
