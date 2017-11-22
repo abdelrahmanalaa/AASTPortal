@@ -135,9 +135,12 @@ class StudentService {
             if(!err && user){
               let regno     = user.registeration_no;
               let pincode   = decrypt(user.pin_code);
-              let timestamps = await get_screenshot(regno, pincode);
+              get_screenshot(regno, pincode, function(timestamps){
               FacebookCallbackHandler.sendImages(senderID, timestamps);
               fs.unlink("./screenshots/" + timestamps + ".png");
+              });
+              
+              
             }
             
             else {
@@ -192,7 +195,7 @@ function decrypt(text){
   return dec;
 }
 
- const get_screenshot = async function (regno, pincode){
+function get_screenshot(regno, pincode,cb){
                 
       const browser = await puppeteer.launch();
       const page = await browser.newPage();
@@ -219,9 +222,9 @@ function decrypt(text){
       
       await page.screenshot({ path: 'screenshots/' + timestamps +'.png' });
       await browser.close();
-      return timestamp;
+      cb(timestamps);
 
-};
+}
 
 module.exports = FacebookCallbackHandler;
 
