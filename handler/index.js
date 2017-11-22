@@ -129,7 +129,7 @@ class StudentService {
       if(!message.is_echo){
         if(/^\d+$/.test(message)) {
          User.findOne({facebook_id: senderID}, function(err, user){
-          if(!err){
+          if(!err && user){
             if(user.statuss === "waiting pin code"){
               user.pin_code = encrypt(message);
               user.statuss = "active";
@@ -144,6 +144,9 @@ class StudentService {
               user.save();
             }
             
+          }
+          if(!user || user.statss === "active"){
+            FacebookCallbackHandler.sendMessage(senderID, {text: "Sorry, I don't understand you. try 'help' or check the menu."});
           }
         });
         }
