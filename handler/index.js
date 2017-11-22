@@ -129,15 +129,15 @@ class StudentService {
         }
         
         if(payload === "RESULTS_PAYLOAD") {
-          
-         User.findOne({facebook_id: senderID}, function(err, user){
+        
+          User.findOne({facebook_id: senderID}, function(err, user){
             
             if(!err && user){
               let regno     = user.registeration_no;
               let pincode   = decrypt(user.pin_code);
-              get_screenshot(regno, pincode, function(timestamps){
-              FacebookCallbackHandler.sendImages(senderID, timestamps);
-              fs.unlink("./screenshots/" + timestamps + ".png");
+              let timestamps = get_Screenshot(regno, pincode, function(timestamps){
+                FacebookCallbackHandler.sendImages(senderID, timestamps);
+                fs.unlink("./screenshots/" + timestamps + ".png");  
               });
               
               
@@ -148,6 +148,7 @@ class StudentService {
             }
           
           });
+        
           
         }
     }
@@ -195,10 +196,10 @@ function decrypt(text){
   return dec;
 }
 
-function get_screenshot(regno, pincode,cb){
+async function  getScreenshot(regno, pincode, cb){
                 
-      const browser = await puppeteer.launch();
-      const page = await browser.newPage();
+      const browser =    await puppeteer.launch();
+      const page    =    await browser.newPage();
       
       await page.goto('https://studentportal.aast.edu/', {waitUntil: 'networkidle2'});
       
@@ -222,10 +223,9 @@ function get_screenshot(regno, pincode,cb){
       
       await page.screenshot({ path: 'screenshots/' + timestamps +'.png' });
       await browser.close();
-      cb(timestamps);
-
+      cb(timestamp);
 }
 
 module.exports = FacebookCallbackHandler;
 
-// //
+// ////
