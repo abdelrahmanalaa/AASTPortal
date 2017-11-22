@@ -16,6 +16,7 @@
     "mongoose": "^4.11.3",
     "node-cron": "^1.2.0",
     "puppeteer": "^0.13.0",
-    "request": "^2.81.0"
+    "request": "^2.81.0",
+    "time-stamp": "^2.0.0"
   }
 }

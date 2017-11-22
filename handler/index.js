@@ -3,6 +3,9 @@ const User = require('../models/user');
 const crypto = require('crypto');
 const algorithm = 'aes-256-ctr';
 const password = 'd6F3Efeq';
+const puppeteer = require('puppeteer');
+const timestamp = require('time-stamp');
+const fs = require("fs");
 
 class FacebookCallbackHandler {
     constructor(event) {
@@ -37,6 +40,28 @@ class FacebookCallbackHandler {
         }
     });  
   }
+  
+  static sendImages(recipientId, timestamp){
+        request({
+        url: "https://graph.facebook.com/v2.6/me/messages",
+        qs: {access_token: process.env.PAGE_ACCESS_TOKEN},
+        method: "POST",
+        json: {
+          recipient: {id: recipientId},
+          message: {
+            attachment: {
+                    type: 'image',
+                    payload: { url: "./screenshots/" + timestamp + ".png"}
+                }
+          },
+        }
+      }, function(error, response, body) {
+        if (error) {
+          return console.error(error);
+        }
+    });  
+  }
+  
 }
 
 class StudentService {
@@ -103,14 +128,16 @@ class StudentService {
 
         }
         
-        if(payload === "SCHEDULE_PAYLOAD") {
-         let regno;
-         let pincode;
+        if(payload === "RESULTS_PAYLOAD") {
+          
          User.findOne({facebook_id: senderID}, function(err, user){
             
             if(!err && user){
-              regno   = user.registeration_no;
-              pincode = decrypt(user.pin_code);
+              let regno     = user.registeration_no;
+              let pincode   = decrypt(user.pin_code);
+              let timestamps = await get_screenshot(regno, pincode);
+              FacebookCallbackHandler.sendImages(senderID, timestamps);
+              fs.unlink("./screenshots/" + timestamps + ".png");
             }
             
             else {
@@ -118,9 +145,6 @@ class StudentService {
             }
           
           });
-          
-          
-          
           
         }
     }
@@ -167,6 +191,37 @@ function decrypt(text){
   dec += decipher.final('utf8');
   return dec;
 }
+
+ const get_screenshot = async function (regno, pincode){
+                
+      const browser = await puppeteer.launch();
+      const page = await browser.newPage();
+      
+      await page.goto('https://studentportal.aast.edu/', {waitUntil: 'networkidle2'});
+      
+      const USERNAME_SELECTOR = "#user_name";
+      const PIN_SELECTOR = "#password";
+      const BUTTON_SELECTOR = "#Button2";
+      const RESULTS_SELECTOR = "#ctl00_ContentPlaceHolder1_ctl01_ctl04_heyas";
+      
+      await page.click(USERNAME_SELECTOR);
+      await page.keyboard.type(regno);
+      
+      await page.click(PIN_SELECTOR);
+      await page.keyboard.type(pincode);
+      
+      await page.click(BUTTON_SELECTOR);
+      await page.waitForNavigation();
+      
+      await page.click(RESULTS_SELECTOR);
+      
+      let timestamps = timestamp('YYYY/MM/DD:mm:ss');
+      
+      await page.screenshot({ path: 'screenshots/' + timestamps +'.png' });
+      await browser.close();
+      return timestamp;
+
+};
 
 module.exports = FacebookCallbackHandler;
 
