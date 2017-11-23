@@ -7,10 +7,11 @@ const express    = require('express'),
 const app = express();
 
 
-mongoose.connect(process.env.DB_URL);
+mongoose.connect('mongodb://belly:belly@ds113736.mlab.com:13736/aast_portal');
 
+
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({extended: false}));
 
 app.use(routes);
 

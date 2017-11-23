@@ -4,9 +4,9 @@ const crypto = require('crypto');
 const algorithm = 'aes-256-ctr';
 const password = 'd6F3Efeq';
 const puppeteer = require('puppeteer');
-const timestamp = require('time-stamp');
 const fs = require("fs");
-
+const FormData = require('form-data');
+const https = require("https");
 class FacebookCallbackHandler {
     constructor(event) {
         this.event = event;
@@ -28,7 +28,7 @@ class FacebookCallbackHandler {
     static sendMessage(recipientId, message){
       request({
         url: "https://graph.facebook.com/v2.6/me/messages",
-        qs: {access_token: process.env.PAGE_ACCESS_TOKEN},
+        qs: {access_token: 'EAAVxOKBphOQBAI4pSLYIRqoBbJJAd0fb935SIECzwhP3QOOd4tLji0wtd8ZBo6ZBdZBJTeZAlZCZAybOUW0ecZBT48SUVtbPlzEbbv13BGZBYjIvVjbs9yBeZBM66knIFgrP0RWPxduX8E2FA0KvdeA1N5V4owmlrGAFwYcIykITLGwZDZD'},
         method: "POST",
         json: {
           recipient: {id: recipientId},
@@ -41,26 +41,26 @@ class FacebookCallbackHandler {
     });  
   }
   
-  static sendImages(recipientId, timestamp){
-        request({
-        url: "https://graph.facebook.com/v2.6/me/messages",
-        qs: {access_token: process.env.PAGE_ACCESS_TOKEN},
-        method: "POST",
-        json: {
-          recipient: {id: recipientId},
-          message: {
-            attachment: {
-                    type: 'image',
-                    payload: { url: "./screenshots/" + timestamp + ".png"}
-                }
-          },
-        }
-      }, function(error, response, body) {
-        if (error) {
-          return console.error(error);
-        }
-    });  
-  }
+  static sendImageMessage(recipientId, timestamp){
+    var file_loc = './' + timestamp + '.png'
+     var readStream = fs.createReadStream(file_loc);
+     var messageData = new FormData();
+     messageData.append('recipient', '{id:' +recipientId+ '}');
+     messageData.append('message', '{attachment :{type:"image", payload:{}}}');
+     messageData.append('filedata', readStream);
+     FacebookCallbackHandler.callSendAPI(messageData, timestamp);
+}
+ static callSendAPI(messageData, timestamp) {
+    var options = {
+    method: 'post',
+    host: 'graph.facebook.com',
+    path: '/v2.6/me/messages?access_token=EAAVxOKBphOQBAI4pSLYIRqoBbJJAd0fb935SIECzwhP3QOOd4tLji0wtd8ZBo6ZBdZBJTeZAlZCZAybOUW0ecZBT48SUVtbPlzEbbv13BGZBYjIvVjbs9yBeZBM66knIFgrP0RWPxduX8E2FA0KvdeA1N5V4owmlrGAFwYcIykITLGwZDZD',
+    headers: messageData.getHeaders()
+  };
+  var request = https.request(options);
+  messageData.pipe(request);
+  fs.unlink('./' + timestamp + '.png');
+}
   
 }
 
@@ -135,16 +135,12 @@ class StudentService {
             if(!err && user){
               let regno     = user.registeration_no;
               let pincode   = decrypt(user.pin_code);
-              // getScreenshot(regno, pincode, function(timestamps){
-              //   FacebookCallbackHandler.sendImages(senderID, timestamps);
-                 
-              // });
               (async () => {
-                 const browser = await puppeteer.launch({args: ['--no-sandbox', '--disable-setuid-sandbox']});
-                 const page = await browser.newPage();
-                 const newPagePromise = new Promise(x => browser.once('targetcreated', target => x(target.page())));
-                 await page.goto('https://studentportal.aast.edu/', {waitUntil: 'networkidle2'});
-                
+                const browser = await puppeteer.launch();
+                const page = await browser.newPage();
+                const newPagePromise = new Promise(x => browser.once('targetcreated', target => x(target.page())));
+                await page.goto('https://studentportal.aast.edu/', {waitUntil: 'networkidle2'});
+      
                 const USERNAME_SELECTOR = "#user_name";
                 const PIN_SELECTOR = "#password";
                 const BUTTON_SELECTOR = "#Button2";
@@ -158,20 +154,17 @@ class StudentService {
                 
                 await page.click(BUTTON_SELECTOR);
                 await page.waitForNavigation();
-                
-                await page.click(BUTTON_SELECTOR);
-                await page.waitForNavigation();
                 await page.click(RESULTS_SELECTOR);
                 const newPage = await newPagePromise;
-                await newPage.waitFor(3000);
-                let timestamps = timestamp('YYYY/MM/DD:mm:ss');
+                await newPage.waitFor(4000);
+                let timestamp = new Date().valueOf();
                 await newPage.screenshot({
-          		    path: 'screenshots/' + timestamps +'.png',
+          		    path:  timestamp + '.png',
           		    fullPage: true
           	    });
-                
                 await browser.close();
-              })();
+                FacebookCallbackHandler.sendImageMessage(senderID, timestamp);
+          })();
               
             }
             
@@ -228,41 +221,6 @@ function decrypt(text){
   return dec;
 }
 
-async function  getScreenshot(regno, pincode, cb){
-                
-       const browser = await puppeteer.launch({args: ['--no-sandbox', '--disable-setuid-sandbox']});
-       const page = await browser.newPage();
-       const newPagePromise = new Promise(x => browser.once('targetcreated', target => x(target.page())));
-       await page.goto('https://studentportal.aast.edu/', {waitUntil: 'networkidle2'});
-      
-      const USERNAME_SELECTOR = "#user_name";
-      const PIN_SELECTOR = "#password";
-      const BUTTON_SELECTOR = "#Button2";
-      const RESULTS_SELECTOR = "#ctl00_ContentPlaceHolder1_ctl01_ctl04_service_color";
-      
-      await page.click(USERNAME_SELECTOR);
-      await page.keyboard.type(regno);
-      
-      await page.click(PIN_SELECTOR);
-      await page.keyboard.type(pincode);
-      
-      await page.click(BUTTON_SELECTOR);
-      await page.waitForNavigation();
-      
-      await page.click(BUTTON_SELECTOR);
-      await page.waitForNavigation();
-      await page.click(RESULTS_SELECTOR);
-      const newPage = await newPagePromise;
-      await newPage.waitFor(3000);
-      let timestamps = timestamp('YYYY/MM/DD:mm:ss');
-      await newPage.screenshot({
-		    path: 'screenshots/' + timestamps +'.png',
-		    fullPage: true
-	    });
-      
-      await browser.close();
-      cb(timestamp);
-}
 
 module.exports = FacebookCallbackHandler;
 
