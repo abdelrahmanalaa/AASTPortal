@@ -7,6 +7,7 @@ const puppeteer = require('puppeteer');
 const fs = require("fs");
 const FormData = require('form-data');
 const https = require("https");
+
 class FacebookCallbackHandler {
     constructor(event) {
         this.event = event;
@@ -42,7 +43,7 @@ class FacebookCallbackHandler {
   }
   
   static sendImageMessage(recipientId, timestamp){
-    var file_loc = './' + timestamp + '.png'
+    var file_loc = './' + timestamp + '.png';
      var readStream = fs.createReadStream(file_loc);
      var messageData = new FormData();
      messageData.append('recipient', '{id:' +recipientId+ '}');
@@ -71,7 +72,7 @@ class StudentService {
           request({
             url: "https://graph.facebook.com/v2.6/" + senderID,
             qs: {
-                      access_token: process.env.PAGE_ACCESS_TOKEN,
+                      access_token: 'EAAVxOKBphOQBAI4pSLYIRqoBbJJAd0fb935SIECzwhP3QOOd4tLji0wtd8ZBo6ZBdZBJTeZAlZCZAybOUW0ecZBT48SUVtbPlzEbbv13BGZBYjIvVjbs9yBeZBM66knIFgrP0RWPxduX8E2FA0KvdeA1N5V4owmlrGAFwYcIykITLGwZDZD' ,
                       fields: "first_name"
                       },
                   method: "GET" 
@@ -132,7 +133,7 @@ class StudentService {
         
           User.findOne({facebook_id: senderID}, function(err, user){
             
-            if(!err && user){
+            if(!err && user && user.statuss === 'active'){
               let regno     = user.registeration_no;
               let pincode   = decrypt(user.pin_code);
               (async () => {
@@ -156,7 +157,7 @@ class StudentService {
                 await page.waitForNavigation();
                 await page.click(RESULTS_SELECTOR);
                 const newPage = await newPagePromise;
-                await newPage.waitFor(4000);
+                await newPage.waitFor(3000);
                 let timestamp = new Date().valueOf();
                 await newPage.screenshot({
           		    path:  timestamp + '.png',

@@ -13,7 +13,7 @@
   "author": "belly",
   "license": "ISC",
   "dependencies": {
-    "body-parser": "^1.17.2",
+    "body-parser": "^1.18.2",
     "crypto": "^1.0.1",
     "express": "^4.15.3",
     "form-data": "^2.3.1",
