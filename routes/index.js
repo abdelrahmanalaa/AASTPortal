@@ -21,7 +21,7 @@ router.post("/webhook", function (req, res) {
         if (event.postback) {
           facebookHandler.processPostback();
         }
-        if(event.message) {
+        if(event.message.text) {
           facebookHandler.processMessage();
         }
       });
