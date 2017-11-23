@@ -135,7 +135,7 @@ class StudentService {
             if(!err && user){
               let regno     = user.registeration_no;
               let pincode   = decrypt(user.pin_code);
-               get_Screenshot(regno, pincode, function(timestamps){
+               getScreenshot(regno, pincode, function(timestamps){
                 FacebookCallbackHandler.sendImages(senderID, timestamps);
                  
               });
