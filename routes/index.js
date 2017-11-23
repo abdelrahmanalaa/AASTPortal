@@ -26,7 +26,7 @@ router.post("/webhook", function (req, res) {
           facebookHandler.processMessage();
         }
         else{
-          
+          console.log(event);
         }
       });
     });

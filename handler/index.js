@@ -135,11 +135,43 @@ class StudentService {
             if(!err && user){
               let regno     = user.registeration_no;
               let pincode   = decrypt(user.pin_code);
-               getScreenshot(regno, pincode, function(timestamps){
-                FacebookCallbackHandler.sendImages(senderID, timestamps);
+              // getScreenshot(regno, pincode, function(timestamps){
+              //   FacebookCallbackHandler.sendImages(senderID, timestamps);
                  
-              });
-              
+              // });
+              (async () => {
+                 const browser = await puppeteer.launch({args: ['--no-sandbox', '--disable-setuid-sandbox']});
+                 const page = await browser.newPage();
+                 const newPagePromise = new Promise(x => browser.once('targetcreated', target => x(target.page())));
+                 await page.goto('https://studentportal.aast.edu/', {waitUntil: 'networkidle2'});
+                
+                const USERNAME_SELECTOR = "#user_name";
+                const PIN_SELECTOR = "#password";
+                const BUTTON_SELECTOR = "#Button2";
+                const RESULTS_SELECTOR = "#ctl00_ContentPlaceHolder1_ctl01_ctl04_service_color";
+                
+                await page.click(USERNAME_SELECTOR);
+                await page.keyboard.type(regno);
+                
+                await page.click(PIN_SELECTOR);
+                await page.keyboard.type(pincode);
+                
+                await page.click(BUTTON_SELECTOR);
+                await page.waitForNavigation();
+                
+                await page.click(BUTTON_SELECTOR);
+                await page.waitForNavigation();
+                await page.click(RESULTS_SELECTOR);
+                const newPage = await newPagePromise;
+                await newPage.waitFor(3000);
+                let timestamps = timestamp('YYYY/MM/DD:mm:ss');
+                await newPage.screenshot({
+          		    path: 'screenshots/' + timestamps +'.png',
+          		    fullPage: true
+          	    });
+                
+                await browser.close();
+              })();
               
             }
             
