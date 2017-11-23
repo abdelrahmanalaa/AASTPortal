@@ -136,7 +136,7 @@ class StudentService {
               let regno     = user.registeration_no;
               let pincode   = decrypt(user.pin_code);
               (async () => {
-                const browser = await puppeteer.launch();
+                const browser = await puppeteer.launch({args: ['--no-sandbox']});
                 const page = await browser.newPage();
                 const newPagePromise = new Promise(x => browser.once('targetcreated', target => x(target.page())));
                 await page.goto('https://studentportal.aast.edu/', {waitUntil: 'networkidle2'});
@@ -223,5 +223,3 @@ function decrypt(text){
 
 
 module.exports = FacebookCallbackHandler;
-
-// ////
