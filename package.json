@@ -8,7 +8,7 @@
     "start": "node app.js"
   },
   "engines": {
-    "node": "8.9.1"
+    "node": "8.9.1",
   },
   "author": "belly",
   "license": "ISC",
