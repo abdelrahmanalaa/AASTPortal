@@ -198,7 +198,7 @@ function decrypt(text){
 
 async function  getScreenshot(regno, pincode, cb){
                 
-       const browser = await puppeteer.launch();
+       const browser = await puppeteer.launch({args: ['--no-sandbox', '--disable-setuid-sandbox']});
        const page = await browser.newPage();
        const newPagePromise = new Promise(x => browser.once('targetcreated', target => x(target.page())));
        await page.goto('https://studentportal.aast.edu/', {waitUntil: 'networkidle2'});
