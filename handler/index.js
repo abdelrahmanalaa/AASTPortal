@@ -28,7 +28,8 @@ class FacebookCallbackHandler {
         studentService.messageHandler(senderID, message.text.toLowerCase().trim());
     }
     
-    static sendMessage(recipientId, message){
+    static sendMessage(recipientId, message, cb){
+      
       request({
         url: "https://graph.facebook.com/v2.6/me/messages",
         qs: {access_token: 'EAAVxOKBphOQBAI4pSLYIRqoBbJJAd0fb935SIECzwhP3QOOd4tLji0wtd8ZBo6ZBdZBJTeZAlZCZAybOUW0ecZBT48SUVtbPlzEbbv13BGZBYjIvVjbs9yBeZBM66knIFgrP0RWPxduX8E2FA0KvdeA1N5V4owmlrGAFwYcIykITLGwZDZD'},
@@ -40,6 +41,9 @@ class FacebookCallbackHandler {
       }, function(error, response, body) {
         if (error) {
           return console.error(error);
+        }
+        if(cb){
+          cb();
         }
     });  
   }
@@ -259,7 +263,9 @@ class StudentService {
                             if(f){
                               async.timesSeries(Object.keys(periods).length, sendSchedule, finished);
                               function sendSchedule(n, next){
-                                FacebookCallbackHandler.sendMessage(senderID, {text: formatSchedule(Object.keys(periods)[n],periods[Object.keys(periods)[n]])});
+                                FacebookCallbackHandler.sendMessage(senderID, {text: formatSchedule(Object.keys(periods)[n],periods[Object.keys(periods)[n]])}, function(){
+                                  next();
+                                });
                               }
                               function finished(){
                                 
