@@ -233,6 +233,7 @@ class StudentService {
                             let table = dom.window.document.querySelectorAll('tbody')[3];
                             let trs = table.querySelectorAll('tr');
                             let day = new Date().getDay();
+                            console.log(day);
                             let tds = trs[(day+2)%7].querySelectorAll('td');
                             const periodsMap = {
                                 1: 1,
