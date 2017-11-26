@@ -238,8 +238,10 @@ class StudentService {
                             };
                     
                             let currentColumn = 1;
+                            let f = 0;
                             for(let i =1 ; i < tds.length; i++){
                                 if(tds[i].hasAttribute('colspan')){
+                                   f=1;
                                    const courseName = tds[i].querySelector('span > span').textContent.trim();
                                    const period = periodsMap[currentColumn];
                                    currentColumn += parseInt(tds[i].getAttribute('colspan') || 1, 10);
@@ -248,11 +250,10 @@ class StudentService {
                                } else{
                                    currentColumn += 1;
                                }
-                                
+                             if(i === tds.length - 1 && !f) {
+                               FacebookCallbackHandler.sendMessage(senderID, {text: "Fortunately, You are free today! Enjoy :D"});
+                             }   
                             }
-                            
-                             
-                            
                         }
                     });
                     await browser.close();
@@ -314,6 +315,7 @@ function decrypt(text){
 }
 
 function formatSchedule(p, text){
+  text = text.replace(/\s\s+/g, ' ');
   return p + " - " + text;
 }
 
