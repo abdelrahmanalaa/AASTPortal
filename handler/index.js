@@ -9,7 +9,7 @@ const FormData = require('form-data');
 const https = require("https");
 const jsdom = require("jsdom");
 const { JSDOM } = jsdom;
-
+const async = require('async');
 class FacebookCallbackHandler {
     constructor(event) {
         this.event = event;
@@ -257,10 +257,13 @@ class StudentService {
                             }
                             
                             if(f){
-                              for (const key of Object.keys(periods)) {
-                                  // console.log(key, periods[key]);
-                                  FacebookCallbackHandler.sendMessage(senderID, {text: formatSchedule(key,periods[key])});
-                                }
+                              async.timesSeries(Object.keys(periods).length, sendSchedule, finished);
+                              function sendSchedule(n, next){
+                                FacebookCallbackHandler.sendMessage(senderID, {text: formatSchedule(Object.keys(periods)[n],periods[Object.keys(periods)[n]])});
+                              }
+                              function finished(){
+                                
+                              }
                             }
                             
                             
