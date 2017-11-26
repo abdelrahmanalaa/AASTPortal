@@ -7,6 +7,8 @@ const puppeteer = require('puppeteer');
 const fs = require("fs");
 const FormData = require('form-data');
 const https = require("https");
+const jsdom = require("jsdom");
+const { JSDOM } = jsdom;
 
 class FacebookCallbackHandler {
     constructor(event) {
@@ -60,7 +62,9 @@ class FacebookCallbackHandler {
   };
   var request = https.request(options);
   messageData.pipe(request);
-  fs.unlink('./' + timestamp + '.png');
+  fs.unlink('./' + timestamp + '.png'), function(){
+    // nothing to handle xD
+  };
 }
   
 }
@@ -93,11 +97,11 @@ class StudentService {
             if(fUser && fUser.statuss === 'waiting regno'){
               return FacebookCallbackHandler.sendMessage(senderID, {text: "Please enter your registeration number."});
             }
-          if(!err && !fUser){
-          User.create({facebook_id: senderID,statuss: "waiting regno"}, function(err, user){
-            if(!err){
-              return FacebookCallbackHandler.sendMessage(senderID, {text: "Please enter your registeration number."});
-            }
+            if(!err && !fUser){
+              User.create({facebook_id: senderID,statuss: "waiting regno"}, function(err, user){
+                if(!err){
+                  return FacebookCallbackHandler.sendMessage(senderID, {text: "Please enter your registeration number."});
+              }
             return console.error(err);
           });
           }
@@ -121,7 +125,7 @@ class StudentService {
                 User.findOneAndRemove({facebook_id: senderID}, function(err, user){
                   if(err)
                     return console.error(err);
-                    return FacebookCallbackHandler.sendMessage(senderID, {text: "Done."});
+                  return FacebookCallbackHandler.sendMessage(senderID, {text: "Done."});
                 });
               }
             }
@@ -136,7 +140,7 @@ class StudentService {
             if(!err && user && user.statuss === 'active'){
               let regno     = user.registeration_no;
               let pincode   = decrypt(user.pin_code);
-              (async () => {
+             try{  (async () => {
                 const browser = await puppeteer.launch({args: ['--no-sandbox']});
                 const page = await browser.newPage();
                 const newPagePromise = new Promise(x => browser.once('targetcreated', target => x(target.page())));
@@ -165,7 +169,11 @@ class StudentService {
           	    });
                 await browser.close();
                 FacebookCallbackHandler.sendImageMessage(senderID, timestamp);
-          })();
+          })(); }
+          
+          catch(err){
+            FacebookCallbackHandler.sendMessage(senderID, {text: "Unfortunately, There is something wrong with your credentials, You may want to unsubscribe then subscribe again."});
+          }
               
             }
             
@@ -174,14 +182,110 @@ class StudentService {
             }
           
           });
+        }
         
+        if(payload === 'SCHEDULE_PAYLOAD') {
+          User.findOne({facebook_id: senderID}, function(err, fUser){
+            if(err){
+              return console.error(err);
+            }
+            
+            if(!fUser){
+              return FacebookCallbackHandler.sendMessage(senderID, {text: "You must subscribe first."});
+            }
+            
+            FacebookCallbackHandler.sendMessage(senderID, {text: "One Moment, please."});
+            
+              let regno     = fUser.registeration_no;
+              let pincode   = decrypt(fUser.pin_code);
+              
+              try {
+                    (async () => {
+                    const browser = await puppeteer.launch({args: ['--no-sandbox']});
+                    const page = await browser.newPage();
+                    const newPagePromise = new Promise(x => browser.once('targetcreated', target => x(target.page())));
+                    await page.goto('https://studentportal.aast.edu/', {waitUntil: 'networkidle2'});
           
+                    const USERNAME_SELECTOR = "#user_name";
+                    const PIN_SELECTOR = "#password";
+                    const BUTTON_SELECTOR = "#Button2";
+                    const RESULTS_SELECTOR = "#ctl00_ContentPlaceHolder1_ctl01_ctl12_service_color";
+                    
+                    await page.click(USERNAME_SELECTOR);
+                    await page.keyboard.type(regno);
+                    
+                    await page.click(PIN_SELECTOR);
+                    await page.keyboard.type(pincode);
+                    
+                    await page.click(BUTTON_SELECTOR);
+                    await page.waitForNavigation();
+                    await page.click(RESULTS_SELECTOR);
+                    const newPage = await newPagePromise;
+                    await newPage.waitFor(3000);
+                    let url = newPage.url();
+                    request(url, (error, response, html) => {
+                        if(!error){
+                            let dom = new JSDOM(html);
+                            let table = dom.window.document.querySelectorAll('tbody')[3];
+                            let trs = table.querySelectorAll('tr');
+                            let day = new Date().getDay();
+                            let tds = trs[(day+2)%7].querySelectorAll('td');
+                            let f = 0;
+                          
+                            for(let i=1; i<=tds.length; i++){
+                                if(tds[i] && tds[i].hasAttribute('colspan')){
+                                   let courseName = tds[i].querySelector('span > span').textContent;
+                                    f=1;
+                                    if(i === 1) {
+                                        let period = '1st';
+                                        FacebookCallbackHandler.sendMessage(senderID, {text: formatSchedule(period, courseName)});
+                                    }
+                                    
+                                    else if(i >= 2 && i <= 3) {
+                                        let period = '2nd';
+                                        FacebookCallbackHandler.sendMessage(senderID, {text: formatSchedule(period, courseName)});
+                                        
+                                    }
+                                    
+                                    else if(i >=4 && i <= 5) {
+                                        let period = '3rd';
+                                        FacebookCallbackHandler.sendMessage(senderID, {text: formatSchedule(period, courseName)});
+                                        
+                                    }
+                                    
+                                    else {
+                                        let period = '4th';
+                                        FacebookCallbackHandler.sendMessage(senderID, {text: formatSchedule(period, courseName)});
+                                    }
+                                }
+
+                                if((i+1) === tds.length && !f) {
+                                    FacebookCallbackHandler.sendMessage(senderID, {text: "You are free today! Enjoy :D"});
+                                }
+                            }
+                            
+                             
+                            
+                        }
+                    });
+                    await browser.close();
+                    
+              })();
+              }
+              
+              catch(err){
+                FacebookCallbackHandler.sendMessage(senderID, {text: "Unfortunately, There is something wrong with your credentials, You may want to unsubscribe then subscribe again."});
+              }
+            
+          });
         }
     }
     
     messageHandler(senderID, message) {
       if(!message.is_echo){
-        
+        if(message === 'help'){
+          return FacebookCallbackHandler.sendMessage(senderID, {text: "I am a chatbot that helps you easily check your results or schedule only with one click!."});
+        }
          User.findOne({facebook_id: senderID}, function(err, user){
           if(!err && user){
             if(user.statuss === "waiting pin code"){
@@ -199,7 +303,7 @@ class StudentService {
             }
             
           }
-          if(!user || user.statss === "active"){
+          if(!user || user.statuss === "active"){
             FacebookCallbackHandler.sendMessage(senderID, {text: "Sorry, I don't understand you. try 'help' or check the menu."});
           }
         });
@@ -222,6 +326,8 @@ function decrypt(text){
   return dec;
 }
 
+function formatSchedule(p, text){
+  return p + " - " + text;
+}
 
 module.exports = FacebookCallbackHandler;
-///
