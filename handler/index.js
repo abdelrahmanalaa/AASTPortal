@@ -229,39 +229,26 @@ class StudentService {
                             let table = dom.window.document.querySelectorAll('tbody')[3];
                             let trs = table.querySelectorAll('tr');
                             let day = new Date().getDay();
-                            let tds = trs[(day+2)%7].querySelectorAll('td');
-                            let f = 0;
-                          
-                            for(let i=1; i<=tds.length; i++){
-                                if(tds[i] && tds[i].hasAttribute('colspan')){
-                                   let courseName = tds[i].querySelector('span > span').textContent;
-                                    f=1;
-                                    if(i === 1) {
-                                        let period = '1st';
-                                        FacebookCallbackHandler.sendMessage(senderID, {text: formatSchedule(period, courseName)});
-                                    }
+                            let tds = trs[(day+2)%7].querySelectorAll('td').filter;
+                            const periodsMap = {
+                                1: 1,
+                                3: 2,
+                                5: 3,
+                                7: 4
+                            };
+                    
+                            let currentColumn = 1;
+                            for(let i =1 ; i < tds.length; i++){
+                                if(tds[i].hasAttribute('colspan')){
+                                   const courseName = tds[i].querySelector('span > span').textContent.trim();
+                                   const period = periodsMap[currentColumn];
+                                   currentColumn += parseInt(tds[i].getAttribute('colspan') || 1, 10);
+                                   FacebookCallbackHandler.sendMessage(senderID, {text: formatSchedule(period, courseName)});
                                     
-                                    else if(i >= 2 && i <= 3) {
-                                        let period = '2nd';
-                                        FacebookCallbackHandler.sendMessage(senderID, {text: formatSchedule(period, courseName)});
-                                        
-                                    }
-                                    
-                                    else if(i >=4 && i <= 5) {
-                                        let period = '3rd';
-                                        FacebookCallbackHandler.sendMessage(senderID, {text: formatSchedule(period, courseName)});
-                                        
-                                    }
-                                    
-                                    else {
-                                        let period = '4th';
-                                        FacebookCallbackHandler.sendMessage(senderID, {text: formatSchedule(period, courseName)});
-                                    }
-                                }
-
-                                if((i+1) === tds.length && !f) {
-                                    FacebookCallbackHandler.sendMessage(senderID, {text: "You are free today! Enjoy :D"});
-                                }
+                               } else{
+                                   currentColumn += 1;
+                               }
+                                
                             }
                             
                              
