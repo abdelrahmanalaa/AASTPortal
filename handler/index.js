@@ -300,7 +300,7 @@ class StudentService {
               user.pin_code = encrypt(message);
               user.statuss = "active";
               user.save();
-              FacebookCallbackHandler.sendMessage(senderID, {text: "Done, now you can query for your current semester results or your current day schedule from the menu."});
+             return  FacebookCallbackHandler.sendMessage(senderID, {text: "Done, now you can query for your current semester results or your current day schedule from the menu."});
             }
             
             if(user.statuss === "waiting regno"){
