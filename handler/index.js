@@ -62,11 +62,11 @@ class FacebookCallbackHandler {
   };
   var request = https.request(options);
   messageData.pipe(request);
-  fs.unlink('./' + timestamp + '.png'), function(){
-    // nothing to handle xD
-  };
+  fs.unlink('./' + timestamp + '.png', function(){
+    
+  });
 }
-  
+
 }
 
 class StudentService {
@@ -236,16 +236,17 @@ class StudentService {
                                 5: 3,
                                 7: 4
                             };
-                    
+                          
                             let currentColumn = 1;
                             let f = 0;
+                            let periods = {};
                             for(let i =1 ; i < tds.length; i++){
                                 if(tds[i].hasAttribute('colspan')){
                                    f=1;
                                    const courseName = tds[i].querySelector('span > span').textContent.trim();
                                    const period = periodsMap[currentColumn];
+                                   periods[period] = courseName;
                                    currentColumn += parseInt(tds[i].getAttribute('colspan') || 1, 10);
-                                   FacebookCallbackHandler.sendMessage(senderID, {text: formatSchedule(period, courseName)});
                                     
                                } else{
                                    currentColumn += 1;
@@ -254,6 +255,16 @@ class StudentService {
                                FacebookCallbackHandler.sendMessage(senderID, {text: "Fortunately, You are free today! Enjoy :D"});
                              }   
                             }
+                            
+                            if(f){
+                              for (const key of Object.keys(periods)) {
+                                  // console.log(key, periods[key]);
+                                  FacebookCallbackHandler.sendMessage(senderID, {text: formatSchedule(key,periods[key])});
+                                }
+                            }
+                            
+                            
+                            
                         }
                     });
                     await browser.close();
@@ -320,4 +331,3 @@ function formatSchedule(p, text){
 }
 
 module.exports = FacebookCallbackHandler;
-//
