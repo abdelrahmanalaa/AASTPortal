@@ -144,6 +144,7 @@ class StudentService {
             if(!err && user && user.statuss === 'active'){
               let regno     = user.registeration_no;
               let pincode   = decrypt(user.pin_code);
+              FacebookCallbackHandler.sendMessage(senderID, {text: "One Moment, please."});
              try{  (async () => {
                 const browser = await puppeteer.launch({args: ['--no-sandbox']});
                 const page = await browser.newPage();
