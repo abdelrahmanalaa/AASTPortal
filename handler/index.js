@@ -224,6 +224,7 @@ class StudentService {
                     const newPage = await newPagePromise;
                     await newPage.waitFor(3000);
                     let url = newPage.url();
+                    console.log(url);
                     request(url, (error, response, html) => {
                         if(!error){
                             let dom = new JSDOM(html);
@@ -256,8 +257,8 @@ class StudentService {
                                FacebookCallbackHandler.sendMessage(senderID, {text: "Fortunately, You are free today! Enjoy :D"});
                              }   
                             }
+                              
                             
-                            console.log(f + "shittty");
                             
                             if(f){
                               console.log(f);
