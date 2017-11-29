@@ -145,7 +145,7 @@ class StudentService {
               let regno     = user.registeration_no;
               let pincode   = decrypt(user.pin_code);
               FacebookCallbackHandler.sendMessage(senderID, {text: "One Moment, please."});
-             try{  (async () => {
+               (async () => {
                 const browser = await puppeteer.launch({args: ['--no-sandbox']});
                 const page = await browser.newPage();
                 const newPagePromise = new Promise(x => browser.once('targetcreated', target => x(target.page())));
@@ -174,11 +174,7 @@ class StudentService {
           	    });
                 await browser.close();
                 FacebookCallbackHandler.sendImageMessage(senderID, timestamp);
-          })(); }
-          
-          catch(err){
-            FacebookCallbackHandler.sendMessage(senderID, {text: "Unfortunately, There is something wrong with your credentials, You may want to unsubscribe then subscribe again."});
-          }
+          })(); 
               
             }
             
@@ -204,7 +200,7 @@ class StudentService {
               let regno     = fUser.registeration_no;
               let pincode   = decrypt(fUser.pin_code);
               
-              try {
+              
                     (async () => {
                     const browser = await puppeteer.launch({args: ['--no-sandbox']});
                     const page = await browser.newPage();
@@ -214,7 +210,7 @@ class StudentService {
                     const USERNAME_SELECTOR = "#user_name";
                     const PIN_SELECTOR = "#password";
                     const BUTTON_SELECTOR = "#Button2";
-                    const RESULTS_SELECTOR = "#ctl00_ContentPlaceHolder1_ctl01_ctl12_service_color";
+                    const SCHEDULE_SELECTOR = "#ctl00_ContentPlaceHolder1_ctl01_ctl12_service_color";
                     
                     await page.click(USERNAME_SELECTOR);
                     await page.keyboard.type(regno);
@@ -224,7 +220,7 @@ class StudentService {
                     
                     await page.click(BUTTON_SELECTOR);
                     await page.waitForNavigation();
-                    await page.click(RESULTS_SELECTOR);
+                    await page.click(SCHEDULE_SELECTOR);
                     const newPage = await newPagePromise;
                     await newPage.waitFor(3000);
                     let url = newPage.url();
@@ -281,11 +277,9 @@ class StudentService {
                     await browser.close();
                     
               })();
-              }
               
-              catch(err){
-                FacebookCallbackHandler.sendMessage(senderID, {text: "Unfortunately, There is something wrong with your credentials, You may want to unsubscribe then subscribe again."});
-              }
+              
+              
             
           });
         }
