@@ -163,7 +163,11 @@ class StudentService {
                 await page.keyboard.type(pincode);
                 
                 await page.click(BUTTON_SELECTOR);
-                await page.waitForNavigation();
+                try{
+                     await page.waitForNavigation();
+                   } catch(err){
+                     FacebookCallbackHandler.sendMessage(senderID, {text: "Unfortunately, There is something wrong with your credentials, You may have to unsubscribe and subscribe again"});
+                   }
                 await page.click(RESULTS_SELECTOR);
                 const newPage = await newPagePromise;
                 await newPage.waitFor(5000);
@@ -222,7 +226,7 @@ class StudentService {
                    try{
                      await page.waitForNavigation();
                    } catch(err){
-                     FacebookCallbackHandler.sendMessage(senderID, {text: "There is something wrong with your credentials"});
+                     FacebookCallbackHandler.sendMessage(senderID, {text: "Unfortunately, There is something wrong with your credentials, You may have to unsubscribe and subscribe again"});
                    }
                     await page.click(SCHEDULE_SELECTOR);
                     const newPage = await newPagePromise;
