@@ -259,6 +259,7 @@ class StudentService {
                             }
                             
                             if(f){
+                              console.log(f);
                               async.timesSeries(Object.keys(periods).length, sendSchedule, finished);
                               function sendSchedule(n, next){
                                 FacebookCallbackHandler.sendMessage(senderID, {text: formatSchedule(Object.keys(periods)[n],periods[Object.keys(periods)[n]])}, function(){
