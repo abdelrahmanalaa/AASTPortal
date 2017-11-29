@@ -166,7 +166,7 @@ class StudentService {
                 try{
                      await page.waitForNavigation();
                    } catch(err){
-                     FacebookCallbackHandler.sendMessage(senderID, {text: "Unfortunately, There is something wrong with your credentials, You may have to unsubscribe and subscribe again."});
+                    return FacebookCallbackHandler.sendMessage(senderID, {text: "Unfortunately, There is something wrong with your credentials, You may have to unsubscribe and subscribe again."});
                    }
                 await page.click(RESULTS_SELECTOR);
                 const newPage = await newPagePromise;
@@ -226,7 +226,7 @@ class StudentService {
                    try{
                      await page.waitForNavigation();
                    } catch(err){
-                     FacebookCallbackHandler.sendMessage(senderID, {text: "Unfortunately, There is something wrong with your credentials, You may have to unsubscribe and subscribe again."});
+                     return FacebookCallbackHandler.sendMessage(senderID, {text: "Unfortunately, There is something wrong with your credentials, You may have to unsubscribe and subscribe again."});
                    }
                     await page.click(SCHEDULE_SELECTOR);
                     const newPage = await newPagePromise;
