@@ -232,6 +232,10 @@ class StudentService {
                             let trs = table.querySelectorAll('tr');
                             let day = new Date().getDay();
                             let tds = trs[(day+2)%7].querySelectorAll('td');
+                            if(tds.length === 1) {
+                              day++;
+                              tds = trs[(day+2)%7].querySelectorAll('td');
+                            }
                             const periodsMap = {
                                 1: 1,
                                 3: 2,
@@ -256,8 +260,6 @@ class StudentService {
                              if(i === tds.length - 1 && !f) {
                                FacebookCallbackHandler.sendMessage(senderID, {text: "Fortunately, You are free today! Enjoy :D"});
                              }
-                             
-                             console.log(i);
                             }
                             
                             
