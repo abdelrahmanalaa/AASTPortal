@@ -219,7 +219,11 @@ class StudentService {
                     await page.keyboard.type(pincode);
                     
                     await page.click(BUTTON_SELECTOR);
-                    await page.waitForNavigation();
+                   try{
+                     await page.waitForNavigation();
+                   } catch(err){
+                     FacebookCallbackHandler.sendMessage(senderID, {text: "There is something wrong with your credentials"});
+                   }
                     await page.click(SCHEDULE_SELECTOR);
                     const newPage = await newPagePromise;
                     await newPage.waitFor(3000);
