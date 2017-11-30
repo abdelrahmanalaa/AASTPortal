@@ -240,6 +240,7 @@ class StudentService {
                             let trs = table.querySelectorAll('tr');
                             let day = new Date().getDay();
                             let tds = trs[(day+2)%7].querySelectorAll('td');
+                            console.log(trs.length);
                             if(trs.length === 9) {
                               console.log("?????");
                               day++;
