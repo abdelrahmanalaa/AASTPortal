@@ -230,7 +230,7 @@ class StudentService {
                    }
                     await page.click(SCHEDULE_SELECTOR);
                     const newPage = await newPagePromise;
-                    await newPage.waitFor(3000);
+                    await newPage.waitFor(1000);
                     let url = newPage.url();
                     
                     request(url, (error, response, html) => {
@@ -240,7 +240,7 @@ class StudentService {
                             let trs = table.querySelectorAll('tr');
                             let day = new Date().getDay();
                             let tds = trs[(day+2)%7].querySelectorAll('td');
-                            if(tds.length === 1) {
+                            if(trs.length === 9) {
                               day++;
                               tds = trs[(day+2)%7].querySelectorAll('td');
                             }
@@ -275,7 +275,6 @@ class StudentService {
                             
                             
                             if(f){
-                              console.log(f);
                               async.timesSeries(Object.keys(periods).length, sendSchedule, finished);
                               function sendSchedule(n, next){
                                 FacebookCallbackHandler.sendMessage(senderID, {text: formatSchedule(Object.keys(periods)[n],periods[Object.keys(periods)[n]])}, function(){
