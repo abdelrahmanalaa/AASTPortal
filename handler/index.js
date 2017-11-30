@@ -250,10 +250,10 @@ class StudentService {
                             }
                             
                             let day = new Date().getDay();
-                            console.log(day);
+                            
                             
                             var tds = pos.includes((day+2)%7) ? trs[(++day+2)%7].querySelectorAll('td') : trs[(day+2)%7].querySelectorAll('td'); 
-                            
+                            console.log(tds.length);
                             
                             const periodsMap = {
                                 1: 1,
