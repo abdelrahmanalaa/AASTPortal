@@ -259,7 +259,10 @@ class StudentService {
                             }
                             
                             else{
+                              
                                 var tds = trs[(++day+2)%7].querySelectorAll('td');
+                                console.log(tds.length);
+                              
                             }
                             
                             
