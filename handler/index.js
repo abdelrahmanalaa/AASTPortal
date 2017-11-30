@@ -241,7 +241,7 @@ class StudentService {
                             let trs = table.querySelectorAll('tr');
                             var pos = [];
                             if(trs.length > 8) {
-                              let offset = trs.length - 8;
+                              var offset = trs.length - 8;
                               for(let i=1; i<trs.length; i++){
                                 if(trs[i].querySelectorAll('td').length <= offset){
                                   pos.push(i);
@@ -288,7 +288,7 @@ class StudentService {
                                    currentColumn += 1;
                                }
                              if(i === tds.length - 1 && !f) {
-                               FacebookCallbackHandler.sendMessage(senderID, {text: "Fortunately, You are free today! Enjoy :D"});
+                               FacebookCallbackHandler.sendMessage(senderID, {text: "Fortunately, You are free today! Enjoy. :D"});
                              }
                             }
                             
