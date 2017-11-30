@@ -259,9 +259,7 @@ class StudentService {
                             }
                             
                             else{
-                              if(pos.includes((day+2)%7)){
                                 var tds = trs[(++day+2)%7].querySelectorAll('td');
-                              }
                             }
                             
                             
