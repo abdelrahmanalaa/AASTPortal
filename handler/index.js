@@ -171,7 +171,7 @@ class StudentService {
                    }
                 await page.click(RESULTS_SELECTOR);
                 const newPage = await newPagePromise;
-                await newPage.waitFor(5000);
+                await newPage.waitFor(3000);
                 let timestamp = new Date().valueOf();
                 await newPage.screenshot({
           		    path:  timestamp + '.png',
