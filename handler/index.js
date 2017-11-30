@@ -171,7 +171,6 @@ class StudentService {
                    }
                 await page.click(RESULTS_SELECTOR);
                 const newPage = await newPagePromise;
-                await newPage.waitForNavigation();
                 let timestamp = new Date().valueOf();
                 await newPage.screenshot({
           		    path:  timestamp + '.png',
@@ -231,7 +230,6 @@ class StudentService {
                    }
                     await page.click(SCHEDULE_SELECTOR);
                     const newPage = await newPagePromise;
-                    await newPage.waitForNavigation();
                     let url = newPage.url();
                     
                     request(url, (error, response, html) => {
