@@ -238,14 +238,21 @@ class StudentService {
                             let dom = new JSDOM(html);
                             let table = dom.window.document.querySelectorAll('tbody')[3];
                             let trs = table.querySelectorAll('tr');
-                            let day = new Date().getDay();
-                            let tds = trs[(day+2)%7].querySelectorAll('td');
-                            console.log(trs.length);
-                            if(trs.length === 9) {
-                              console.log("?????");
-                              day++;
-                              tds = trs[(day+2)%7].querySelectorAll('td');
+                            var pos = [];
+                            if(trs.length > 8) {
+                              let offset = trs.length - 8;
+                              for(let i=1; i<trs.length; i++){
+                                if(trs[i].querySelectorAll('td').length <= offset){
+                                  pos.push(i);
+                                }
+                              }
                             }
+                            
+                            let day = new Date().getDay();
+                            
+                            var tds = pos.includes((day+2)%7) ? trs[(++day+2)%7].querySelectorAll('td') : trs[(day+2)%7].querySelectorAll('td'); 
+                            
+                            
                             const periodsMap = {
                                 1: 1,
                                 3: 2,
