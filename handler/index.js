@@ -241,6 +241,7 @@ class StudentService {
                             let day = new Date().getDay();
                             let tds = trs[(day+2)%7].querySelectorAll('td');
                             if(trs.length === 9) {
+                              console.log("?????");
                               day++;
                               tds = trs[(day+2)%7].querySelectorAll('td');
                             }
