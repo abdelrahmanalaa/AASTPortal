@@ -10,6 +10,7 @@ const https = require("https");
 const jsdom = require("jsdom");
 const { JSDOM } = jsdom;
 const async = require('async');
+
 class FacebookCallbackHandler {
     constructor(event) {
         this.event = event;
@@ -249,6 +250,7 @@ class StudentService {
                             }
                             
                             let day = new Date().getDay();
+                            console.log(day);
                             
                             var tds = pos.includes((day+2)%7) ? trs[(++day+2)%7].querySelectorAll('td') : trs[(day+2)%7].querySelectorAll('td'); 
                             
