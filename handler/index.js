@@ -247,8 +247,9 @@ class StudentService {
                                 }
                               }
                             }
-                            console.log(((day+2)%7)+offset);
                             let day = new Date().getDay();
+                            console.log(((day+2)%7)+offset);
+                            
                            
                             
                             if(!pos.length || (day+2)%7 < pos[0]){
