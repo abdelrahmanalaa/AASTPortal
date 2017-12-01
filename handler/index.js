@@ -272,9 +272,8 @@ class StudentService {
                             let currentColumn = 1;
                             let f = 0;
                             let periods = {};
+                            console.log(tds.length);
                             for(let i =1 ; i < tds.length; i++){
-                              console.log(tds.length)
-                              console.log(i);
                                 if(tds[i].hasAttribute('colspan')){
                                    f=1;
                                    const courseName = tds[i].querySelector('span > span').textContent.trim();
