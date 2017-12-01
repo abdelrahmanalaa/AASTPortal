@@ -201,7 +201,7 @@ class StudentService {
             }
             let day = new Date().getDay();
             if(day === 5) {
-              FacebookCallbackHandler.sendMessage(senderID, {text: "Fortunately, You are free today! Enjoy. :D"});
+              return FacebookCallbackHandler.sendMessage(senderID, {text: "Fortunately, You are free today! Enjoy. :D"});
             }
             FacebookCallbackHandler.sendMessage(senderID, {text: "One Moment, please."});
             
