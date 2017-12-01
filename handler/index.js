@@ -249,13 +249,15 @@ class StudentService {
                             }
                             
                             let day = new Date().getDay();
-              
+                           console.log('pos '+ pos.length);
                             
                             if(!pos.length || (day+2)%7 < pos[0]){
                               
                               var tds = trs[(day+2)%7].querySelectorAll('td');
                               
                             }
+                            
+                            
                             
                             else{
                                 var tds = trs[((day+2)%7)+offset].querySelectorAll('td');
