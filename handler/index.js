@@ -259,6 +259,7 @@ class StudentService {
                             
                             else{
                                 var tds = trs[((day+2)%7)+offset].querySelectorAll('td');
+                                 console.log(((day+2)%7)+offset);
                             }
                             
                             
@@ -272,7 +273,7 @@ class StudentService {
                             let currentColumn = 1;
                             let f = 0;
                             let periods = {};
-                            console.log(tds.length);
+                           
                             for(let i =1 ; i < tds.length; i++){
                                 if(tds[i].hasAttribute('colspan')){
                                    f=1;
