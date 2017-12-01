@@ -199,7 +199,10 @@ class StudentService {
             if(!fUser){
               return FacebookCallbackHandler.sendMessage(senderID, {text: "You must subscribe first."});
             }
-            
+            let day = new Date().getDay();
+            if(day === 5) {
+              FacebookCallbackHandler.sendMessage(senderID, {text: "Fortunately, You are free today! Enjoy. :D"});
+            }
             FacebookCallbackHandler.sendMessage(senderID, {text: "One Moment, please."});
             
               let regno     = fUser.registeration_no;
@@ -247,10 +250,6 @@ class StudentService {
                                 }
                               }
                             }
-                            let day = new Date().getDay();
-                            console.log(((day+2)%7)+offset);
-                            
-                           
                             
                             if(!pos.length || (day+2)%7 < pos[0]){
                               
