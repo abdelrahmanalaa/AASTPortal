@@ -247,9 +247,9 @@ class StudentService {
                                 }
                               }
                             }
-                            
+                            console.log(((day+2)%7)+offset);
                             let day = new Date().getDay();
-                           console.log('pos '+ pos.length);
+                           
                             
                             if(!pos.length || (day+2)%7 < pos[0]){
                               
@@ -261,7 +261,7 @@ class StudentService {
                             
                             else{
                                 var tds = trs[((day+2)%7)+offset].querySelectorAll('td');
-                                 console.log(((day+2)%7)+offset);
+                                 
                             }
                             
                             
