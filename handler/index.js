@@ -324,7 +324,7 @@ class StudentService {
       
         const greeting = firstEntity(message.nlp, 'greetings');
         const thx = firstEntity(message.nlp, 'thanks');
-        const bye = firstEntity(message.npm, 'bye');
+        const bye = firstEntity(message.nlp, 'bye');
         
         if (greeting && greeting.confidence > 0.8) {
             return FacebookCallbackHandler.sendMessage(senderID, {text: 'Hi there!'});
@@ -353,7 +353,7 @@ class StudentService {
             
             if(user.statuss === "waiting regno"){
               FacebookCallbackHandler.sendMessage(senderID, {text: "Please enter your pin code."});
-              user.registeration_no = message;
+              user.registeration_no = message.text.toLowerCase().trim();
               user.statuss = "waiting pin code";
               user.save();
             }
