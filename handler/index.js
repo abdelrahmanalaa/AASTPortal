@@ -324,7 +324,7 @@ class StudentService {
         const greeting = firstEntity(message.nlp, 'greeting');
         const thx = firstEntity(message.nlp, 'thanks');
         const bye = firstEntity(message.npm, 'bye');
-        console.log(message.nlp);
+        console.log(message);
         if (greeting && greeting.confidence > 0.8) {
             return FacebookCallbackHandler.sendMessage(senderID, {text: 'Hi there!'});
         } 
@@ -391,3 +391,6 @@ function firstEntity(nlp, name) {
 }
 
 module.exports = FacebookCallbackHandler;
+
+
+
