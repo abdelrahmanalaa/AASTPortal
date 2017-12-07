@@ -26,7 +26,7 @@ class FacebookCallbackHandler {
         let senderID = this.event.sender.id;
         let message = this.event.message;
         let studentService = new StudentService(senderID);
-        studentService.messageHandler(senderID, message.text.toLowerCase().trim());
+        studentService.messageHandler(senderID, message.toLowerCase().trim());
     }
     
     static sendMessage(recipientId, message, cb){
@@ -324,7 +324,7 @@ class StudentService {
         const greeting = firstEntity(message.nlp, 'greeting');
         const thx = firstEntity(message.nlp, 'thanks');
         const bye = firstEntity(message.npm, 'bye');
-        console.log(message);
+        console.log(message.nlp);
         if (greeting && greeting.confidence > 0.8) {
             return FacebookCallbackHandler.sendMessage(senderID, {text: 'Hi there!'});
         } 
