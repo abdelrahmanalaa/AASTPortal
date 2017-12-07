@@ -101,7 +101,7 @@ class StudentService {
             if(!err && !fUser){
               User.create({facebook_id: senderID,statuss: "waiting regno"}, function(err, user){
                 if(!err){
-                  return FacebookCallbackHandler.sendMessage(senderID, {text: "Please enter your registeration number."});
+                  return FacebookCallbackHandler.sendMessage(senderID, {text: "Please enter your registration number."});
               }
             return console.error(err);
           });
