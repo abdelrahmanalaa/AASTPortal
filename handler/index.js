@@ -50,28 +50,24 @@ class FacebookCallbackHandler {
   }
   
   static sendImageMessage(recipientId, timestamp){
-    var file_loc = './' + timestamp + '.png';
+     var file_loc = './' + timestamp + '.png';
      var readStream = fs.createReadStream(file_loc);
      var messageData = new FormData();
      messageData.append('recipient', '{id:' +recipientId+ '}');
      messageData.append('message', '{attachment :{type:"image", payload:{}}}');
      messageData.append('filedata', readStream);
-     FacebookCallbackHandler.callSendAPI(messageData, timestamp);
-}
- static callSendAPI(messageData, timestamp) {
-    var options = {
-    method: 'post',
-    host: 'graph.facebook.com',
-    path: '/v2.6/me/messages?access_token=EAAVxOKBphOQBAI4pSLYIRqoBbJJAd0fb935SIECzwhP3QOOd4tLji0wtd8ZBo6ZBdZBJTeZAlZCZAybOUW0ecZBT48SUVtbPlzEbbv13BGZBYjIvVjbs9yBeZBM66knIFgrP0RWPxduX8E2FA0KvdeA1N5V4owmlrGAFwYcIykITLGwZDZD',
-    headers: messageData.getHeaders()
-  };
-  var request = https.request(options);
-  messageData.pipe(request);
-  fs.unlink('./' + timestamp + '.png', function(){
-    
-  });
-}
-
+     var options = {
+     method: 'post',
+     host: 'graph.facebook.com',
+     path: '/v2.6/me/messages?access_token=EAAVxOKBphOQBAI4pSLYIRqoBbJJAd0fb935SIECzwhP3QOOd4tLji0wtd8ZBo6ZBdZBJTeZAlZCZAybOUW0ecZBT48SUVtbPlzEbbv13BGZBYjIvVjbs9yBeZBM66knIFgrP0RWPxduX8E2FA0KvdeA1N5V4owmlrGAFwYcIykITLGwZDZD',
+     headers: messageData.getHeaders()
+    };
+    var request = https.request(options);
+    messageData.pipe(request);
+    fs.unlink('./' + timestamp + '.png', function(){
+      
+    });
+ }
 }
 
 class StudentService {
@@ -325,6 +321,22 @@ class StudentService {
     
     messageHandler(senderID, message) {
       if(!message.is_echo){
+        const greeting = firstEntity(message.nlp, 'greeting');
+        const thx = firstEntity(message.nlp, 'thanks');
+        const bye = firstEntity(message.npm, 'bye');
+        if (greeting && greeting.confidence > 0.8) {
+            return FacebookCallbackHandler.sendMessage(senderID, {text: 'Hi there!'});
+        } 
+        
+        if(thx && thx.confidence > 0.8) {
+          return FacebookCallbackHandler.sendMessage(senderID, {text: 'You are always welcome :)'});
+        }
+        
+        if(bye && bye.confidence > 0.8) {
+          return FacebookCallbackHandler.sendMessage(senderID, {text: "Goodbye!"});
+        }
+        
+        
         if(message === 'help'){
           return FacebookCallbackHandler.sendMessage(senderID, {text: "I am a chatbot that helps you easily check your results or schedule only with one click!."});
         }
@@ -371,6 +383,10 @@ function decrypt(text){
 function formatSchedule(p, text){
   text = text.replace(/\s\s+/g, ' ');
   return p + " - " + text;
+}
+
+function firstEntity(nlp, name) {
+  return nlp && nlp.entities && nlp.entities && nlp.entities[name] && nlp.entities[name][0];
 }
 
 module.exports = FacebookCallbackHandler;
