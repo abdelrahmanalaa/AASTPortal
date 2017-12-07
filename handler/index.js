@@ -322,10 +322,10 @@ class StudentService {
     messageHandler(senderID, message) {
       if(!message.is_echo){
       
-        const greeting = firstEntity(message.nlp, 'greeting');
+        const greeting = firstEntity(message.entities, 'greetings');
         const thx = firstEntity(message.nlp, 'thanks');
         const bye = firstEntity(message.npm, 'bye');
-        console.log(message.nlp);
+        console.log(greeting);
         if (greeting && greeting.confidence > 0.8) {
             return FacebookCallbackHandler.sendMessage(senderID, {text: 'Hi there!'});
         } 
@@ -339,7 +339,7 @@ class StudentService {
         }
         
         
-        if(message.text.toLowerCase() === 'help'){
+        if(message.text.toLowerCase().trim() === 'help'){
           return FacebookCallbackHandler.sendMessage(senderID, {text: "I am a chatbot that helps you easily check your results or schedule only with one click!."});
         }
          User.findOne({facebook_id: senderID}, function(err, user){
