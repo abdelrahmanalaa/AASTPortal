@@ -322,7 +322,7 @@ class StudentService {
     messageHandler(senderID, message) {
       if(!message.is_echo){
       
-        const greeting = firstEntity(message.entities, 'greetings');
+        const greeting = firstEntity(message.nlp, 'greetings');
         const thx = firstEntity(message.nlp, 'thanks');
         const bye = firstEntity(message.npm, 'bye');
         console.log(greeting);
@@ -357,10 +357,6 @@ class StudentService {
               user.statuss = "waiting pin code";
               user.save();
             }
-            
-          }
-          if(!user || user.statuss === "active"){
-            FacebookCallbackHandler.sendMessage(senderID, {text: "Sorry, I don't understand you. try 'help' or check the menu."});
           }
         });
         
