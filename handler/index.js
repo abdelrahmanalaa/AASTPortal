@@ -325,7 +325,7 @@ class StudentService {
         const greeting = firstEntity(message.nlp, 'greetings');
         const thx = firstEntity(message.nlp, 'thanks');
         const bye = firstEntity(message.npm, 'bye');
-        console.log(greeting);
+        
         if (greeting && greeting.confidence > 0.8) {
             return FacebookCallbackHandler.sendMessage(senderID, {text: 'Hi there!'});
         } 
@@ -345,7 +345,7 @@ class StudentService {
          User.findOne({facebook_id: senderID}, function(err, user){
           if(!err && user){
             if(user.statuss === "waiting pin code"){
-              user.pin_code = encrypt(message);
+              user.pin_code = encrypt(message.text.toLowerCase().trim());
               user.statuss = "active";
               user.save();
              return  FacebookCallbackHandler.sendMessage(senderID, {text: "Done, now you can query for your current semester results or your current day schedule from the menu."});
