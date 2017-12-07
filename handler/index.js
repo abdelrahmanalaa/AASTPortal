@@ -26,7 +26,7 @@ class FacebookCallbackHandler {
         let senderID = this.event.sender.id;
         let message = this.event.message;
         let studentService = new StudentService(senderID);
-        studentService.messageHandler(senderID, message.toLowerCase().trim());
+        studentService.messageHandler(senderID, message);
     }
     
     static sendMessage(recipientId, message, cb){
@@ -321,6 +321,7 @@ class StudentService {
     
     messageHandler(senderID, message) {
       if(!message.is_echo){
+      
         const greeting = firstEntity(message.nlp, 'greeting');
         const thx = firstEntity(message.nlp, 'thanks');
         const bye = firstEntity(message.npm, 'bye');
@@ -338,7 +339,7 @@ class StudentService {
         }
         
         
-        if(message === 'help'){
+        if(message.text.toLowerCase() === 'help'){
           return FacebookCallbackHandler.sendMessage(senderID, {text: "I am a chatbot that helps you easily check your results or schedule only with one click!."});
         }
          User.findOne({facebook_id: senderID}, function(err, user){
