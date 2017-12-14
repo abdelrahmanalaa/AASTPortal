@@ -151,7 +151,7 @@ class StudentService {
                 const USERNAME_SELECTOR = "#user_name";
                 const PIN_SELECTOR = "#password";
                 const BUTTON_SELECTOR = "#Button2";
-                const RESULTS_SELECTOR = "#ctl00_ContentPlaceHolder1_ctl01_ctl04_service_color";
+                const RESULTS_SELECTOR = "#ctl00_ContentPlaceHolder1_ctl01_ctl05_bgdiv";
                 
                 await page.click(USERNAME_SELECTOR);
                 await page.keyboard.type(regno);
@@ -214,7 +214,7 @@ class StudentService {
                     const USERNAME_SELECTOR = "#user_name";
                     const PIN_SELECTOR = "#password";
                     const BUTTON_SELECTOR = "#Button2";
-                    const SCHEDULE_SELECTOR = "#ctl00_ContentPlaceHolder1_ctl01_ctl12_service_color";
+                    const SCHEDULE_SELECTOR = "#ctl00_ContentPlaceHolder1_ctl01_ctl13_bgdiv";
                     
                     await page.click(USERNAME_SELECTOR);
                     await page.keyboard.type(regno);
