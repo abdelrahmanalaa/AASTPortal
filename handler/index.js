@@ -33,7 +33,7 @@ class FacebookCallbackHandler {
       
       request({
         url: "https://graph.facebook.com/v2.6/me/messages",
-        qs: {access_token: 'EAAVxOKBphOQBAI4pSLYIRqoBbJJAd0fb935SIECzwhP3QOOd4tLji0wtd8ZBo6ZBdZBJTeZAlZCZAybOUW0ecZBT48SUVtbPlzEbbv13BGZBYjIvVjbs9yBeZBM66knIFgrP0RWPxduX8E2FA0KvdeA1N5V4owmlrGAFwYcIykITLGwZDZD'},
+        qs: {access_token: 'EAAVxOKBphOQBANLBTB0bc2TIF64TqjT1KBM9vnfVAmoT9q1b4QQ5r8C5e3PPZAb5X58FpHVee2VXAbPZCX9mXrKTLdLr0ZBMDf3kvwbKvFI6qKIg7y3NNoZBZCktng9ASm0NdNr7rmAajUOsUxqPeNIM3eoUN8lhoohy9VXBI6AZDZD'},
         method: "POST",
         json: {
           recipient: {id: recipientId},
@@ -59,7 +59,7 @@ class FacebookCallbackHandler {
      var options = {
      method: 'post',
      host: 'graph.facebook.com',
-     path: '/v2.6/me/messages?access_token=EAAVxOKBphOQBAI4pSLYIRqoBbJJAd0fb935SIECzwhP3QOOd4tLji0wtd8ZBo6ZBdZBJTeZAlZCZAybOUW0ecZBT48SUVtbPlzEbbv13BGZBYjIvVjbs9yBeZBM66knIFgrP0RWPxduX8E2FA0KvdeA1N5V4owmlrGAFwYcIykITLGwZDZD',
+     path: '/v2.6/me/messages?access_token=EAAVxOKBphOQBANLBTB0bc2TIF64TqjT1KBM9vnfVAmoT9q1b4QQ5r8C5e3PPZAb5X58FpHVee2VXAbPZCX9mXrKTLdLr0ZBMDf3kvwbKvFI6qKIg7y3NNoZBZCktng9ASm0NdNr7rmAajUOsUxqPeNIM3eoUN8lhoohy9VXBI6AZDZD',
      headers: messageData.getHeaders()
     };
     var request = https.request(options);
@@ -77,7 +77,7 @@ class StudentService {
           request({
             url: "https://graph.facebook.com/v2.6/" + senderID,
             qs: {
-                      access_token: 'EAAVxOKBphOQBAI4pSLYIRqoBbJJAd0fb935SIECzwhP3QOOd4tLji0wtd8ZBo6ZBdZBJTeZAlZCZAybOUW0ecZBT48SUVtbPlzEbbv13BGZBYjIvVjbs9yBeZBM66knIFgrP0RWPxduX8E2FA0KvdeA1N5V4owmlrGAFwYcIykITLGwZDZD' ,
+                      access_token: 'EAAVxOKBphOQBANLBTB0bc2TIF64TqjT1KBM9vnfVAmoT9q1b4QQ5r8C5e3PPZAb5X58FpHVee2VXAbPZCX9mXrKTLdLr0ZBMDf3kvwbKvFI6qKIg7y3NNoZBZCktng9ASm0NdNr7rmAajUOsUxqPeNIM3eoUN8lhoohy9VXBI6AZDZD' ,
                       fields: "first_name"
                       },
                   method: "GET" 
