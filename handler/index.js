@@ -49,8 +49,8 @@ class FacebookCallbackHandler {
     });  
   }
   
-  static sendImageMessage(recipientId, timestamp){
-     var file_loc = './' + timestamp + '.png';
+  static sendImageMessage(recipientId){
+     var file_loc = './' + recipientId + '.png';
      var readStream = fs.createReadStream(file_loc);
      var messageData = new FormData();
      messageData.append('recipient', '{id:' +recipientId+ '}');
@@ -64,7 +64,7 @@ class FacebookCallbackHandler {
     };
     var request = https.request(options);
     messageData.pipe(request);
-    fs.unlink('./' + timestamp + '.png', function(){
+    fs.unlink('./' + recipientId + '.png', function(){
       
     });
  }
@@ -234,11 +234,11 @@ async function getResults(senderID){
                 await newPage.waitFor(4000);
                 let timestamp = new Date().valueOf();
                 await newPage.screenshot({
-          		    path:  timestamp + '.png',
+          		    path:  senderID + '.png',
           		    fullPage: true
           	    });
                 await browser.close();
-                FacebookCallbackHandler.sendImageMessage(senderID, timestamp);
+                FacebookCallbackHandler.sendImageMessage(senderID);
           })(); 
               
             }
