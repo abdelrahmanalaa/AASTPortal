@@ -18,7 +18,7 @@ router.post("/webhook", function (req, res) {
       
       entry.messaging.forEach(function(event) {
         var facebookHandler = new FacebookCallbackHandler(event);
-        if (event.postback) {
+        if (event.postback){
           facebookHandler.processPostback();
         }
         if(event.message && event.message.text) {
@@ -37,4 +37,3 @@ router.get('/', function(req, res){
 
 module.exports = router;
 
-//

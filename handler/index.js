@@ -26,7 +26,7 @@ class FacebookCallbackHandler {
         let senderID = this.event.sender.id;
         let message = this.event.message;
         let studentService = new StudentService(senderID);
-        studentService.messageHandler(senderID, message);
+        studentService.messageHandler(senderID, message.text.toLowerCase().trim());
     }
     
     static sendMessage(recipientId, message, cb){
@@ -135,7 +135,71 @@ class StudentService {
         }
         
         if(payload === "RESULTS_PAYLOAD") {
+          getResults(senderID);
+        }
         
+        if(payload === 'SCHEDULE_PAYLOAD') {
+            getSchedule(senderID);
+        }
+    }
+    
+    messageHandler(senderID, message) {
+      if(!message.is_echo){
+      
+        const greeting = firstEntity(message.nlp, 'greetings');
+        const thx = firstEntity(message.nlp, 'thanks');
+        const bye = firstEntity(message.nlp, 'bye');
+        
+        if (greeting && greeting.confidence > 0.8) {
+            return FacebookCallbackHandler.sendMessage(senderID, {text: 'Hi there!'});
+        } 
+        
+        if(thx && thx.confidence > 0.8) {
+          return FacebookCallbackHandler.sendMessage(senderID, {text: 'You are always welcome :)'});
+        }
+        
+        if(bye && bye.confidence > 0.8) {
+          return FacebookCallbackHandler.sendMessage(senderID, {text: "Goodbye!"});
+        }
+        
+        if(message=== 'results'){
+          getResults(senderID);
+        }
+        if(message === 'schedule'){
+          getSchedule(senderID);
+        }
+        if(message === 'help'){
+          return FacebookCallbackHandler.sendMessage(senderID, {text: "I am a chatbot that helps you easily check your results or schedule only with one click!."});
+        }
+         User.findOne({facebook_id: senderID}, function(err, user){
+          if(!err && user){
+            if(user.statuss === "waiting pin code"){
+              user.pin_code = encrypt(message);
+              user.statuss = "active";
+              user.save();
+             return  FacebookCallbackHandler.sendMessage(senderID, {text: "Done, now you can query for your current semester results or your current day schedule from the menu."});
+            }
+            
+            if(user.statuss === "waiting regno"){
+              if(/^\d+$/.test(message) && message.length === 8){ 
+              FacebookCallbackHandler.sendMessage(senderID, {text: "Please enter your pin code."});
+              user.registeration_no = message;
+              user.statuss = "waiting pin code";
+              user.save();
+             }
+            
+              else{
+                FacebookCallbackHandler.sendMessage(senderID, {text: "Invalid, Please enter your regitration number correctly!."});
+              }
+            }
+          }
+        });
+        
+    }
+}
+}
+
+async function getResults(senderID){
           User.findOne({facebook_id: senderID}, function(err, user){
             
             if(!err && user && user.statuss === 'active'){
@@ -184,9 +248,10 @@ class StudentService {
             }
           
           });
-        }
-        
-        if(payload === 'SCHEDULE_PAYLOAD') {
+  
+}
+
+async function getSchedule(senderID){
           User.findOne({facebook_id: senderID}, function(err, fUser){
             if(err){
               return console.error(err);
@@ -315,53 +380,7 @@ class StudentService {
               
               
             
-          });
-        }
-    }
-    
-    messageHandler(senderID, message) {
-      if(!message.is_echo){
-      
-        const greeting = firstEntity(message.nlp, 'greetings');
-        const thx = firstEntity(message.nlp, 'thanks');
-        const bye = firstEntity(message.nlp, 'bye');
-        
-        if (greeting && greeting.confidence > 0.8) {
-            return FacebookCallbackHandler.sendMessage(senderID, {text: 'Hi there!'});
-        } 
-        
-        if(thx && thx.confidence > 0.8) {
-          return FacebookCallbackHandler.sendMessage(senderID, {text: 'You are always welcome :)'});
-        }
-        
-        if(bye && bye.confidence > 0.8) {
-          return FacebookCallbackHandler.sendMessage(senderID, {text: "Goodbye!"});
-        }
-        
-        
-        if(message.text.toLowerCase().trim() === 'help'){
-          return FacebookCallbackHandler.sendMessage(senderID, {text: "I am a chatbot that helps you easily check your results or schedule only with one click!."});
-        }
-         User.findOne({facebook_id: senderID}, function(err, user){
-          if(!err && user){
-            if(user.statuss === "waiting pin code"){
-              user.pin_code = encrypt(message.text.toLowerCase().trim());
-              user.statuss = "active";
-              user.save();
-             return  FacebookCallbackHandler.sendMessage(senderID, {text: "Done, now you can query for your current semester results or your current day schedule from the menu."});
-            }
-            
-            if(user.statuss === "waiting regno"){
-              FacebookCallbackHandler.sendMessage(senderID, {text: "Please enter your pin code."});
-              user.registeration_no = message.text.toLowerCase().trim();
-              user.statuss = "waiting pin code";
-              user.save();
-            }
-          }
-        });
-        
-    }
-}
+          });  
 }
 
 function encrypt(text){
