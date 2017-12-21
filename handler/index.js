@@ -26,7 +26,7 @@ class FacebookCallbackHandler {
         let senderID = this.event.sender.id;
         let message = this.event.message;
         let studentService = new StudentService(senderID);
-        studentService.messageHandler(senderID, message.text.toLowerCase().trim());
+        studentService.messageHandler(senderID, message);
     }
     
     static sendMessage(recipientId, message, cb){
@@ -162,28 +162,28 @@ class StudentService {
           return FacebookCallbackHandler.sendMessage(senderID, {text: "Goodbye!"});
         }
         
-        if(message=== 'results'){
+        if(message.text.toLowerCase().trim() === 'results'){
           getResults(senderID);
         }
-        if(message === 'schedule'){
+        if(message.text.toLowerCase().trim() === 'schedule'){
           getSchedule(senderID);
         }
-        if(message === 'help'){
+        if(message.text.toLowerCase().trim() === 'help'){
           return FacebookCallbackHandler.sendMessage(senderID, {text: "I am a chatbot that helps you easily check your results or schedule only with one click!."});
         }
          User.findOne({facebook_id: senderID}, function(err, user){
           if(!err && user){
             if(user.statuss === "waiting pin code"){
-              user.pin_code = encrypt(message);
+              user.pin_code = encrypt(message.text.toLowerCase().trim());
               user.statuss = "active";
               user.save();
              return  FacebookCallbackHandler.sendMessage(senderID, {text: "Done, now you can query for your current semester results or your current day schedule from the menu."});
             }
             
             if(user.statuss === "waiting regno"){
-              if(/^\d+$/.test(message) && message.length === 8){ 
+              if(/^\d+$/.test(message.text.toLowerCase().trim()) && message.text.toLowerCase().trim().length === 8){ 
               FacebookCallbackHandler.sendMessage(senderID, {text: "Please enter your pin code."});
-              user.registeration_no = message;
+              user.registeration_no = message.text.toLowerCase().trim();
               user.statuss = "waiting pin code";
               user.save();
              }
