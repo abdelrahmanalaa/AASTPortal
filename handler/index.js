@@ -232,7 +232,6 @@ async function getResults(senderID){
                 await page.click(RESULTS_SELECTOR);
                 const newPage = await newPagePromise;
                 await newPage.waitFor(4000);
-                let timestamp = new Date().valueOf();
                 await newPage.screenshot({
           		    path:  senderID + '.png',
           		    fullPage: true

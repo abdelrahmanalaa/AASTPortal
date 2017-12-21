@@ -22,7 +22,6 @@
     "jsdom": "^11.5.1",
     "mongoose": "^4.11.3",
     "puppeteer": "git://github.com/GoogleChrome/puppeteer",
-    "request": "^2.81.0",
-    "time-stamp": "^2.0.0"
+    "request": "^2.81.0"
   }
 }
