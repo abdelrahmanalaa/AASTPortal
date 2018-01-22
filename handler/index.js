@@ -215,7 +215,7 @@ async function getResults(senderID){
                 const USERNAME_SELECTOR = "#user_name";
                 const PIN_SELECTOR = "#password";
                 const BUTTON_SELECTOR = "#Button2";
-                const RESULTS_SELECTOR = "#ctl00_ContentPlaceHolder1_ctl01_ctl05_bgdiv";
+                const RESULTS_SELECTOR = "#ctl00_ContentPlaceHolder1_ctl01_ctl06_bgdiv";
                 
                 await page.click(USERNAME_SELECTOR);
                 await page.keyboard.type(regno);
@@ -278,7 +278,8 @@ async function getSchedule(senderID){
                     const USERNAME_SELECTOR = "#user_name";
                     const PIN_SELECTOR = "#password";
                     const BUTTON_SELECTOR = "#Button2";
-                    const SCHEDULE_SELECTOR = "#ctl00_ContentPlaceHolder1_ctl01_ctl13_bgdiv";
+                    const SCHEDULE_SELECTOR = "#ctl00_ContentPlaceHolder1_ctl01_ctl14_bgdiv";
+                    
                     
                     await page.click(USERNAME_SELECTOR);
                     await page.keyboard.type(regno);
