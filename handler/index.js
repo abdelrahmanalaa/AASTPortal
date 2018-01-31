@@ -278,7 +278,7 @@ async function getSchedule(senderID){
                     const USERNAME_SELECTOR = "#user_name";
                     const PIN_SELECTOR = "#password";
                     const BUTTON_SELECTOR = "#Button2";
-                    const SCHEDULE_SELECTOR = "#ctl00_ContentPlaceHolder1_ctl01_ctl14_bgdiv";
+                    const SCHEDULE_SELECTOR = "#ctl00_ContentPlaceHolder1_ctl01_ctl13_service_color";
                     
                     
                     await page.click(USERNAME_SELECTOR);
