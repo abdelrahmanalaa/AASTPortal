@@ -1,5 +1,6 @@
 const request = require("request");
 const User = require('../models/user');
+const config = require('../config');
 const crypto = require('crypto');
 const algorithm = 'aes-256-ctr';
 const password = 'd6F3Efeq';
@@ -33,7 +34,7 @@ class FacebookCallbackHandler {
       
       request({
         url: "https://graph.facebook.com/v2.6/me/messages",
-        qs: {access_token: 'EAAVxOKBphOQBANLBTB0bc2TIF64TqjT1KBM9vnfVAmoT9q1b4QQ5r8C5e3PPZAb5X58FpHVee2VXAbPZCX9mXrKTLdLr0ZBMDf3kvwbKvFI6qKIg7y3NNoZBZCktng9ASm0NdNr7rmAajUOsUxqPeNIM3eoUN8lhoohy9VXBI6AZDZD'},
+        qs: {access_token: config.access_token},
         method: "POST",
         json: {
           recipient: {id: recipientId},
@@ -59,7 +60,7 @@ class FacebookCallbackHandler {
      var options = {
      method: 'post',
      host: 'graph.facebook.com',
-     path: '/v2.6/me/messages?access_token=EAAVxOKBphOQBANLBTB0bc2TIF64TqjT1KBM9vnfVAmoT9q1b4QQ5r8C5e3PPZAb5X58FpHVee2VXAbPZCX9mXrKTLdLr0ZBMDf3kvwbKvFI6qKIg7y3NNoZBZCktng9ASm0NdNr7rmAajUOsUxqPeNIM3eoUN8lhoohy9VXBI6AZDZD',
+     path: '/v2.6/me/messages?access_token=' + config.access_token,
      headers: messageData.getHeaders()
     };
     var request = https.request(options);
@@ -77,7 +78,7 @@ class StudentService {
           request({
             url: "https://graph.facebook.com/v2.6/" + senderID,
             qs: {
-                      access_token: 'EAAVxOKBphOQBANLBTB0bc2TIF64TqjT1KBM9vnfVAmoT9q1b4QQ5r8C5e3PPZAb5X58FpHVee2VXAbPZCX9mXrKTLdLr0ZBMDf3kvwbKvFI6qKIg7y3NNoZBZCktng9ASm0NdNr7rmAajUOsUxqPeNIM3eoUN8lhoohy9VXBI6AZDZD' ,
+                      access_token: config.access_token,
                       fields: "first_name"
                       },
                   method: "GET" 
