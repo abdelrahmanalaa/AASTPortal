@@ -1,1 +1,1 @@
-AASTPortal is a Facebook messenger chatbot built with Node.js/Express and MongoDB that helps AASTians to check their results or schedule with only one click!
+AASTPortal is a Facebook messenger chatbot built with Node.js/Express, Headless Chrome and MongoDB that helps AASTians to check their results or schedule with only one click!
